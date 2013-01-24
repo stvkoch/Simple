@@ -1,5 +1,5 @@
 <?php
-namespace Simple;
+namespace Simple\Config;
 /**
  * Work like a container DI. And wrap config.
  * \Simple\Config\Config::readGlobalConfig();
