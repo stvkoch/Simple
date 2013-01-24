@@ -164,6 +164,9 @@ class Model
   //->all('COUNT(*)', array('14-12-1975'), array('order'=>'id', 'limit'=>1, 'offset'=>12'));
   protected function _build_sth_sql_select_count($where='', $opts=array(), $optsCount=array()){
     //if(isset($opts['group'])) $optsCount['group']=$opts['group'];
+    if(isset($opts['left'])) $optsCount['left']=$opts['left'];
+    if(isset($opts['inner'])) $optsCount['inner']=$opts['inner'];
+    if(isset($opts['right'])) $optsCount['right']=$opts['right'];
     if(isset($opts['having'])) $optsCount['having']=$opts['having'];
     if(isset($opts['procedure'])) $optsCount['procedure']=$opts['procedure'];
     return $this->_build_sth_sql_select('COUNT(*) AS total', $where, $optsCount);
