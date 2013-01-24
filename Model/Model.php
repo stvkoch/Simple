@@ -26,9 +26,12 @@ class Model
   public $joins_map = array();
 
 
-  static private function handler(){
+  static private function handler()
+  {
     return \Simple\Config\Config::get('Model', 'handler');
   }
+
+
   public function __invoke()
   {
     return self::handler();
@@ -42,7 +45,8 @@ class Model
 
 
   //->insert(array('name'=>'steven', 'role'=>'admin'))
-  public function insert($fields){
+  public function insert($fields)
+  {
     $sql = $this->_build_sth_sql_insert($fields);
     $sth = self::handler()->prepare($sql);
     $this->_bind_params($sth, $this->_build_sth_bind_params($fields));
@@ -51,7 +55,8 @@ class Model
   }
 
   //->update(array('nome'=>'steven'), 'id = ? AND date > ?', array(1, '14-12-1975'));
-  public function update($fields, $where, $values_binds=array()){
+  public function update($fields, $where, $values_binds=array())
+  {
     if(count($fields)==0) return false;
     try {
       self::handler()->beginTransaction();
@@ -67,14 +72,16 @@ class Model
 
 
   //->delete('id = ? AND date > ?', array(1, '14-12-1975'));
-  public function delete($where, $values_binds=array()){
+  public function delete($where, $values_binds=array())
+  {
     $sth = self::handler()->prepare($this->_build_sth_sql_delete($where));
     $this->_bind_params($sth, $this->_build_sth_bind_params($values_binds));
     return $sth->execute();
   }
 
   //User()->transaction(function(){User()->insert(..);User()->update(...);});
-  public function transaction($callback){
+  public function transaction($callback)
+  {
     try {
       self::handler()->beginTransaction();
       $callback();
@@ -83,6 +90,16 @@ class Model
       self::handler()->rollback();
       return false;
     }
+  }
+
+  public function begin(){
+    return self::handler()->beginTransaction();
+  }
+  public function commit(){
+    return self::handler()->commit();
+  }
+  public function rollback(){
+    self::handler()->rollback();
   }
 
 
@@ -94,8 +111,8 @@ class Model
 
 
   //->select('name, date', date>?', array('14-12-1975'), array('order'=>'id', 'limit'=>1, 'offset'=>12'));
-  public function select($select='', $where='', $values_binds=array(), $opts=array()){
-//var_dump($this->_build_sth_sql_select($select, $where, $opts));
+  public function select($select='', $where='', $values_binds=array(), $opts=array())
+  {
     $sth = self::handler()->prepare($this->_build_sth_sql_select($select, $where, $opts));
     $this->_bind_params($sth, $this->_build_sth_bind_params($values_binds));
     $sth->execute();
@@ -103,13 +120,15 @@ class Model
   }
 
   //->one('id=?', array(1));
-  public function one($where='', $values_binds=array()){
+  public function one($where='', $values_binds=array())
+  {
     $result = $this->select('*', $where, $values_binds);
     return $result->next();
   }
 
   //->all('date>?', array('14-12-1975'), array('order'=>'id', 'limit'=>1, 'offset'=>12'));
-  public function all($where='', $values_binds=array(), $opts=array()){
+  public function all($where='', $values_binds=array(), $opts=array())
+  {
     return $this->select('*', $where, $values_binds, $opts);
   }
 
@@ -118,7 +137,6 @@ class Model
     $sth = self::handler()->prepare($this->_build_sth_sql_select_count($where, $opts, $optsCount));
     $sth->execute($values_binds);
     $result = $sth->fetch( \PDO::FETCH_ASSOC );
-//var_dump($this->_build_sth_sql_select_count($where, $opts, $optsCount), $values_binds);
     return $result['total'];
   }
 
@@ -164,7 +182,7 @@ class Model
     }
     if(isset($opts['left'])){
       if(is_array($opts['left'])){
-        foreach ($$opts['inner'] as $join)
+        foreach ($$opts['left'] as $join)
           $sql .= ' LEFT JOIN '.$this->joins_map[$join];
       }else
         $sql .= ' LEFT JOIN '.$this->joins_map[$opts['left']];

@@ -41,6 +41,7 @@ class Result implements \Iterator
     $this->_init();
   }
 
+  //your stuff initializations
   protected function _init(){}
   
 
