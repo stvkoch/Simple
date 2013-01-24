@@ -5,8 +5,8 @@ php:
   - 5.4
 env:
   - DB=mysql
-before_script: 
-  - composer install
-  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS simple_model_test_tmp;create database IF NOT EXISTS simple_table_tests;'; fi"
+#before_script: 
+  #- composer install
+  #- sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS simple_model_test_tmp;create database IF NOT EXISTS simple_table_tests;'; fi"
 
 script: phpunit .
