@@ -2,10 +2,12 @@
 
 require_once 'Config/Config.php';
 
-require_once 'Model/Exception/ValidationException.php';
-require_once 'Model/Exception/InvalidValue.php';
 require_once 'Model/Model.php';
 require_once 'Result/Result.php';
+require_once 'Model/Validations.php';
+
+require_once 'Model/Exception/ValidationException.php';
+require_once 'Model/Exception/InvalidValue.php';
 
 require_once 'travis-ci-tests/Model/Models/User.php';
 
@@ -47,6 +49,13 @@ class ModelTest extends PHPUnit_Framework_TestCase
 		$user = new \Models\User();
 		$sql = "SELECT COUNT(*) AS total FROM users WHERE date>?";
 		$this->assertEquals( $sql , $user->_buildSthSelectCount('date>?', array('order'=>'id', 'page'=>0, 'group'=>'date')) );
+		
+	}
+
+	public function testValidationsInsert(){
+		$user = new \Models\User();
+		$fields = array('name'=>'steven', 'role'=>'admin');
+		$user->validation( $fields, array($user->validations_all, $user->validations_insert), 'new' );
 		
 	}
 }

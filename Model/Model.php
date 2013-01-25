@@ -29,6 +29,10 @@ class Model
 
   public static $handler = null;
 
+  public $validations_all = array();
+  public $validations_insert = array();
+  public $validations_update = array();
+
   static public function setHandler( $handler )
   {
     self::$handler = $handler;
@@ -47,11 +51,12 @@ class Model
 
 
   //Validations--------------------------------------------------------------------------------------
-  public function validation( $fields, $action)
+  public function validation( $fields, $validations_all, $action)
   {
     $msgs = array();
-    if(isset($this->validation) && is_array($this->validation))
-      foreach ($this->validation as $key => $call) {
+    if(!is_array($validations_all)) $validations_all = array($validations_all);
+    foreach ($validations_all as $validations)
+      foreach ($validations as $key => $call) {
         try {
           $opts = array('fieldName' => $key, 'action' => $action);
           if(isset($fields[$key])) $opts['value'] = $fields[$key];
@@ -72,7 +77,7 @@ class Model
 
   public function callValidation($callName, $opts)
   {
-    preg_match('@\s*([A-Z0-9a-z_\-]+)\s*(\(\s*(.*)\s*\))?\s*@', $callName, $matches);
+    preg_match('@\s*([^\(|\)]+)?\s*(\(\s*(.*)\s*\))?\s*@', $callName, $matches);
     if(isset($matches[3])) $opts['config'] = $matches[3];
     call_user_func($matches[1], $opts);
   }
@@ -83,7 +88,7 @@ class Model
   public function insert($fields)
   {
 
-    $this->validation( $fields, 'new' );
+    $this->validation( $fields, array($this->validations_all, $this->validations_insert), 'new' );
 
     $sql = $this->_buildSthInsert($fields);
     $sth = self::handler()->prepare($sql);
@@ -96,7 +101,7 @@ class Model
   public function update($fields, $where, $values_binds=array())
   {
     
-    $this->validation( $fields, 'update' );
+    $this->validation( $fields, array($this->validations_all, $this->validations_update), 'update' );
 
     try {
       self::handler()->beginTransaction();

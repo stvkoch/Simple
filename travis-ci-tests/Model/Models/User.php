@@ -12,10 +12,35 @@ class User extends \Simple\Model\Model{
 
   public $tableName = 'users';
 
+
   public $joinsMap = array(
     'highlight'=>'highlights ON highlights.userId=users.id',
     'images'=>'images ON images.id=images_users.imageId RIGHT JOIN imagesUsers.userId=users.id'
   );
+
+  /**
+   * \ClassName
+   * $opts['fieldName']
+   * $opts['action']
+   * $opts['value']
+   * $opts['config']
+   */
+  public $validations = array(
+      'name' => array(
+          '\Simple\Model\Validations::required', 
+          '\Simple\Model\Validations::notLessThat(20)'),
+  );
+  public $validations_insert = array(
+      'name' => array(
+          '\Simple\Model\Validations::required', 
+          '\Simple\Model\Validations::notLessThat(20)'),
+  );
+public $validations_update = array(
+      'name' => array(
+          '\Simple\Model\Validations::required', 
+          '\Simple\Model\Validations::notLessThat(20)'),
+  );
+
 
   //generic find method
   public function find($where='', $valuesBind=array(), $opts=array()){
