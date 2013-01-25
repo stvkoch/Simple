@@ -51,7 +51,8 @@ class ModelTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals( $sql , $user->_buildSthSelectCount('date>?', array('order'=>'id', 'page'=>0, 'group'=>'date')) );
 		
 	}
-
+	
+	//@TODO insert asserts
 	public function testValidationsInsert(){
 		$user = new \Models\User();
 		$fields = array('name'=>'steven', 'role'=>'admin');

@@ -1,8 +1,8 @@
 <?php
-namespace Simple\Model;
+namespace Simple\Model\Validations;
 /**
-* '\Simple\Model\Validations::required', 
-* '\Simple\Model\Validations::notLessThat(20)'),
+* '\Simple\Model\Validation\Validations::required', 
+* '\Simple\Model\Validation\Validations::notLessThat(20)'),
 */
 class Validations
 {

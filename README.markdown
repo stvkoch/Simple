@@ -88,15 +88,28 @@ User Model
 
 	class User extends \Simple\Model\Model {
 
-	  public $tableName = 'users';
+		public $tableName = 'users';
 
-	  public $validations = array(
-	  	'name' => array('myValRequired', 'myValLess(20)'),
-	  	'username' => function( $opts ){
-	  		if($opts['action']=='new' && (str_len($opts['value'])>20))
-	  			new \Simple\Model\Exception\InvalidValue('Value are dummy');
-	  	}
-	  );
+		public $validations_all = array(
+			'name' => array(
+				'\Simple\Model\Validation\Validations::required', 
+				'\Simple\Model\Validation\Validations::notLessThat(20)'
+			),
+		);
+		public $validations_insert = array(
+			'name' => array(
+				'\Simple\Model\Validation\Validations::required', 
+				'\Simple\Model\Validation\Validations::notLessThat(20)'
+			),
+		);
+		public $validations_update = array(
+			'name' => array(
+				'\Simple\Model\Validation\Validations::required', 
+				'\Simple\Model\Validation\Validations::notLessThat(20)'
+			),
+		);
+
+
 
 	  public $joinsMap = array(
 	    'posts'=>'posts ON posts.userId=users.id',
