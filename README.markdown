@@ -13,7 +13,7 @@ Simple Components helps build their bundled applications simply. Unpretentious w
 * \Simple\Config\Config
 	It is a class that manages configuration files, you can use it as a DI containers.
 * \Simple\Model\Model
-	Basically helps build your SQL queries. Returning the data encapsulated in a class that helps you interact on loops and paging features.
+	Basically helps build your SQL queries. Returning the data encapsulated in a class that helps you interact on loops and pager feature.
 
 
 ### \Simple\Config\Config
