@@ -22,7 +22,7 @@ Returns the value of an attribute of a specific configuration file.
 
 	\Simple\Config\Config::get('global', 'attributeName', 'defaultValue');
 
-Set transversal configuration value, this is not presiste values on files.
+Set transversal configuration value, this is not persiste values on files.
 
 	\Simple\Config\Config::set('global', 'attributeName', 'attributeValue');
 
