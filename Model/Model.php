@@ -20,15 +20,22 @@ class Model
 
   protected $resultClassName = '\Simple\Result\Result';
 
-  public $table_name = '';
-
+  public $tableName = '';
 
   public $joins_map = array();
 
+  public $per_page = 20;
+
+  public static $handler = null;
+
+  static public function setHandler( $handler )
+  {
+    self::$handler = $handler;
+  }
 
   static private function handler()
   {
-    return \Simple\Config\Config::get('Model', 'handler');
+    return self::$handler;
   }
 
 
@@ -38,15 +45,43 @@ class Model
   }
 
 
+  //Validations--------------------------------------------------------------------------------------
+  public function validation( $fields, $action)
+  {
+    $msgs = array();
+    if(isset($this->validation) && is_array($this->validation))
+      foreach ($this->validation as $key => $call) {
+        try {
+          $opts = array('fieldName' => $key, 'action' => $action);
+          if(isset($fields[$key])) $opts['value'] = $fields[$key];
+          if(is_array($call)) foreach ($call as $call_item) {
+            $this->callValidation($call_item, $opts);
+          }else
+            $this->callValidation($call, $opts);
+          
+        } catch (\Simple\Model\InvalidValue $e) {
+          $msgs[] = $e;
+        }
 
-
+        if(count($msgs)) throw new \Simple\Model\ValidationException($msgs);
+        
+      }
+    return $msgs;
+  }
+  public function callValidation($callName, $opts){
+    preg_match('@\s*(\w+)\s*(\(\s*(\w)\s*\))?\s*@', $callName, $matches);
+    if(isset($matches[3])) $opts['config'] = $matches[3];
+    call_user_func($matches[1], $opts);
+  }
 
   //Transform data--------------------------------------------------------------------------------------
 
-
-  //->insert(array('name'=>'steven', 'role'=>'admin'))
+  //->insert(array('name'=>'steven', 'role'=>'admin') )
   public function insert($fields)
   {
+
+    $this->validation( $fields, 'new' );
+
     $sql = $this->_build_sth_sql_insert($fields);
     $sth = self::handler()->prepare($sql);
     $this->_bind_params($sth, $this->_build_sth_bind_params($fields));
@@ -57,7 +92,9 @@ class Model
   //->update(array('nome'=>'steven'), 'id = ? AND date > ?', array(1, '14-12-1975'));
   public function update($fields, $where, $values_binds=array())
   {
-    if(count($fields)==0) return false;
+    
+    $this->validation( $fields, 'update' );
+
     try {
       self::handler()->beginTransaction();
         $sth = self::handler()->prepare($this->_build_sth_sql_update($fields, $where));
@@ -174,7 +211,7 @@ class Model
 
   //->all('*', array('14-12-1975'), array('order'=>'id', 'limit'=>1, 'offset'=>12'));
   protected function _build_sth_sql_select($select='', $where=array(), &$opts=array()){
-    $sql = 'SELECT '.$select.' FROM '.$this->table_name;
+    $sql = 'SELECT '.$select.' FROM '.$this->tableName;
     if(isset($opts['inner'])){
       if(is_array($opts['inner'])){
         foreach ($opts['inner'] as $join){
@@ -202,7 +239,7 @@ class Model
     if(isset($opts['having'])) $sql .= ' HAVING '.$opts['having'];
     if(isset($opts['order'])) $sql .= ' ORDER BY '.$opts['order'];
     if(isset($opts['page'])){
-      if(!isset($opts['offset'])) $opts['offset'] = (isset($this->per_page)) ? $this->per_page : \Simple\Config\Config::get('Model', 'per_page', 10);
+      if(!isset($opts['offset'])) $opts['offset'] = $this->per_page;
       if($opts['page']>0) $opts['page']--;
      $opts['limit'] = $opts['page'] * $opts['offset'];
     }
@@ -216,7 +253,7 @@ class Model
   //->insert(array('name'=>'steven', 'role'=>'admin'))
   protected function _build_sth_sql_insert($fields){
     $keys = array_keys($fields);
-    $sql = 'INSERT INTO ' . $this->table_name . ' ('.implode(', ', $keys);
+    $sql = 'INSERT INTO ' . $this->tableName . ' ('.implode(', ', $keys);
     array_walk($keys, function(&$v){$v=':'.$v;});
     return $sql.') VALUES ('.implode(', ', $keys).')';
     
@@ -224,7 +261,7 @@ class Model
 
   //->update(array('nome'=>'steven'), 'id = ? AND date > ?', array(1, '14-12-1975'));
   protected function _build_sth_sql_update($fields, $where){
-    $sql = 'UPDATE \''.$this->table_name.'\' SET  ';
+    $sql = 'UPDATE \''.$this->tableName.'\' SET  ';
     foreach ($fields as $key => $value) {
       $sql .= '\''.$key.'\'=:'.$key. ',' ;
     }
@@ -237,7 +274,7 @@ class Model
 
   //->delete('id = ? AND date > ?', array(1, '14-12-1975'));
   protected function _build_sth_sql_delete($where){
-    return 'DELETE FROM '.$this->table_name.' WHERE '.$where;
+    return 'DELETE FROM '.$this->tableName.' WHERE '.$where;
   }
 
   protected function _build_sth_bind_params(){
@@ -295,3 +332,22 @@ class Model
 */
 }
 
+class ValidationException extends Exception
+{
+
+  function __construct($msgs)
+  {
+    $this->msgs = $msgs;
+  }
+  public function getMessage()
+  {
+    $this->msgs;
+  }
+}
+
+class InvalidValue extends Exception{
+    public function __toString()
+    {
+      return $this->getMessage();
+    }
+}

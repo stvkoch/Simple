@@ -2,7 +2,6 @@
 namespace Simple\Config;
 /**
  * Work like a container DI. And wrap config.
- * \Simple\Config\Config::readGlobalConfig();
  * \Simple\Config\Config::get(__CLASS__, 'attribute_name');
  * 
  * @author steven koch <steven.koch@co.sapo.pt>
@@ -17,11 +16,6 @@ class Config {
   static public function setPath( $newPath )
   {
     self::$_path = $newPath;
-  }
-
-  static public function readGlobalConfig()
-  {
-    return self::readClassConfig('config');
   }
 
   static public function readClassConfig( $className )
