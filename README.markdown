@@ -42,12 +42,12 @@ Example file configuration. config/database.php
 
 			if(is_null($_handler)){
 				try {
-				    $_handler = new PDO(
+				    $_handler = new \PDO(
 				    	\Simple\Config\Config::get('database', 'dsn'), 
 				    	\Simple\Config\Config::get('database', 'username'), 
 				    	\Simple\Config\Config::get('database', 'password')
 				    );
-				} catch (PDOException $e) {
+				} catch (\PDOException $e) {
 				    echo 'Connection failed: ' . $e->getMessage();
 				}
 			}
@@ -117,7 +117,10 @@ User Model
 	  return $user;
 	}
 
-
+	function myValRequired( $opts ){
+		if($opts['valeu']=='') new \Simple\Model\Exception\InvalidValue($opts['fieldName']' Required!');
+	}
+	function myValLess( $opts ){}
 
 @Tests
 - travis-ci-tests/Config/ConfigTest.php

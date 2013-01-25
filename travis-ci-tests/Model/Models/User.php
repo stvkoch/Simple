@@ -1,5 +1,5 @@
 <?php
-namespace Example\Model;
+namespace Models;
 /**
  * Model User
  * 

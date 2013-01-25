@@ -3,10 +3,10 @@ namespace Simple\Result;
 /**
 *   $artigos = Articles::get_list( $_GET['page'] )
 *
-*   $artigos->current_page()
-*   $artigos->total_pages()
-*   $artigos->has_next_page()
-*   $artigos->has_previous_page()
+*   $artigos->currentPage()
+*   $artigos->totalPages()
+*   $artigos->hasNextPage()
+*   $artigos->hasPreviousPage()
 *
 *   foreach( $artigos as $artigo ){
 *     
@@ -23,19 +23,19 @@ class Result implements \Iterator
   protected $_sth;
   protected $_model;
   protected $_where;
-  protected $_values_binds;
+  protected $_valuesBinds;
   protected $_opts;
   protected $_i=0;
   protected $_row;
   protected $_count=null;
 
-  //return new Result($sth->execute($values_binds), $this, $where, $values_binds, $opts);
+  //return new Result($sth->execute($valuesBinds), $this, $where, $valuesBinds, $opts);
   public function __construct(&$sth, \Simple\Model\Model $model, $where, $values_binds=array(), $opts=array())
   {
     $this->_sth=$sth;
     $this->_model=$model;
     $this->_where=$where;
-    $this->_values_binds=$values_binds;
+    $this->_valuesBinds=$values_binds;
     $this->_opts=$opts;
 
     $this->_init();
@@ -45,11 +45,11 @@ class Result implements \Iterator
   protected function _init(){}
   
 
-  //public function count($where='', $values_binds=array(), $opts=array(), $optsCount=array()){
+  //public function count($where='', $valuesBinds=array(), $opts=array(), $optsCount=array()){
   public function count()
   {
     if($this->_count==null)
-      $this->_count=$this->_model->count($this->_where, $this->_values_binds, $this->_opts);//from sql builder
+      $this->_count=$this->_model->count($this->_where, $this->_valuesBinds, $this->_opts);//from sql builder
     return $this->_count; 
   }
 
@@ -78,22 +78,22 @@ class Result implements \Iterator
 
 
   //@paginator stuffs
-  public function previous_page(){
-    return ($this->has_previous_page())? $this->current_page()-1 : $this->current_page();
+  public function previousPage(){
+    return ($this->hasPreviousPage())? $this->currentPage()-1 : $this->currentPage();
   }
-  public function next_page(){
-    return ($this->has_next_page()) ? $this->current_page()+1 : $this->current_page();
+  public function nextPage(){
+    return ($this->hasNextPage()) ? $this->currentPage()+1 : $this->currentPage();
   }
-  public function has_previous_page(){
-    return ($this->current_page()>1);
+  public function hasPreviousPage(){
+    return ($this->currentPage()>1);
   }
-  public function has_next_page(){
-    return ($this->total_pages() > $this->current_page());
+  public function hasNextPage(){
+    return ($this->totalPages() > $this->currentPage());
   }
-  public function current_page(){
+  public function currentPage(){
     return $this->_opts['limit']/$this->_opts['offset']+1;
   }
-  public function total_pages(){
+  public function totalPages(){
     $total = $this->count()/$this->_opts['offset'];
     return (!$total)? 1 : ceil($total);
   }
