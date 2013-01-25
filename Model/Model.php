@@ -19,7 +19,7 @@ namespace Simple\Model;
 class Model
 {
 
-  /*protected*/ public $resultClassName = '\Simple\Result\Result';
+  /*protected*/ public $resultClassName = '\Simple\Model\Result\Result';
 
   public $tableName = '';
 
@@ -78,7 +78,8 @@ class Model
   public function callValidation($callName, $opts)
   {
     preg_match('@\s*([^\(|\)]+)?\s*(\(\s*(.*)\s*\))?\s*@', $callName, $matches);
-    if(isset($matches[3])) $opts['config'] = $matches[3];
+    if(isset($matches[3]))
+      $opts['config'] = $matches[3];
     call_user_func($matches[1], $opts);
   }
 

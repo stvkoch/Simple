@@ -1,5 +1,5 @@
 <?php
-namespace Simple\Result;
+namespace Simple\Model\Result;
 /**
 *   $artigos = Articles::get_list( $_GET['page'] )
 *

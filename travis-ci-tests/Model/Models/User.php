@@ -25,20 +25,23 @@ class User extends \Simple\Model\Model{
    * $opts['value']
    * $opts['config']
    */
-  public $validations = array(
+  public $validations_all = array(
       'name' => array(
-          '\Simple\Model\Validations::required', 
-          '\Simple\Model\Validations::notLessThat(20)'),
+          '\Simple\Model\Validation\Validations::notLessThat(20)',
+          '\Simple\Model\Validation\Validations::required()',
+      )
   );
   public $validations_insert = array(
       'name' => array(
-          '\Simple\Model\Validations::required', 
-          '\Simple\Model\Validations::notLessThat(20)'),
+          '\Simple\Model\Validation\Validations::required', 
+          '\Simple\Model\Validation\Validations::notLessThat(20)'
+      ),
   );
 public $validations_update = array(
       'name' => array(
-          '\Simple\Model\Validations::required', 
-          '\Simple\Model\Validations::notLessThat(20)'),
+          '\Simple\Model\Validation\Validations::required', 
+          '\Simple\Model\Validation\Validations::notLessThat(20)'
+      ),
   );
 
 

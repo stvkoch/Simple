@@ -120,6 +120,14 @@ User Model
 	  public function find($where='', $valuesBind=array(), $opts=array()){
 	    return User()->select('users.*, images.*, count(highlights.id) as totalHighlights', $where, $valuesBind, $opts+array('left'=>array('highlight', 'images'), 'group'=>'users.id', 'order'=>'name'));//get all user wth paginator
 	  }
+
+	  public function insert( $fields ){
+	  	try{
+
+	  		}catch( ValidationException $e ){
+
+	  		}
+	  }
 	}
 	//Alias User()
 	function User(){

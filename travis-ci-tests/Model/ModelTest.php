@@ -3,8 +3,9 @@
 require_once 'Config/Config.php';
 
 require_once 'Model/Model.php';
-require_once 'Result/Result.php';
-require_once 'Model/Validations.php';
+require_once 'Model/Result/Result.php';
+
+require_once 'Model/Validation/Validations.php';
 
 require_once 'Model/Exception/ValidationException.php';
 require_once 'Model/Exception/InvalidValue.php';
@@ -51,8 +52,10 @@ class ModelTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals( $sql , $user->_buildSthSelectCount('date>?', array('order'=>'id', 'page'=>0, 'group'=>'date')) );
 		
 	}
-	
-	//@TODO insert asserts
+
+	/**
+	 * @expectedException \Simple\Model\Exception\InvalidValue
+	 */
 	public function testValidationsInsert(){
 		$user = new \Models\User();
 		$fields = array('name'=>'steven', 'role'=>'admin');
