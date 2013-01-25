@@ -79,7 +79,7 @@ Example file configuration. config/database.php
 	);
 
 
-#### Models file
+#### Models files
 
 User Model
 
