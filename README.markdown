@@ -92,20 +92,21 @@ User Model
 
 		public $validations_all = array(
 			'name' => array(
-				'\Simple\Model\Validation\Validations::required', 
-				'\Simple\Model\Validation\Validations::notLessThat(20)'
+				''\Simple\Model\Validation\String::contains([foo,bar])',
+				'\Simple\Model\Validation\String::required', 
+				'\Simple\Model\Validation\String::notLessThat(20)'
 			),
 		);
 		public $validations_insert = array(
 			'name' => array(
-				'\Simple\Model\Validation\Validations::required', 
-				'\Simple\Model\Validation\Validations::notLessThat(20)'
+				'\Simple\Model\Validation\String::required', 
+				'\Simple\Model\Validation\String::notLessThat(20)'
 			),
 		);
 		public $validations_update = array(
 			'name' => array(
-				'\Simple\Model\Validation\Validations::required', 
-				'\Simple\Model\Validation\Validations::notLessThat(20)'
+				'\Simple\Model\Validation\String::required', 
+				'\Simple\Model\Validation\String::notLessThat(20)'
 			),
 		);
 
