@@ -53,13 +53,4 @@ class ModelTest extends PHPUnit_Framework_TestCase
 		
 	}
 
-	/**
-	 * @expectedException \Simple\Model\Exception\InvalidValue
-	 */
-	public function testValidationsInsert(){
-		$user = new \Models\User();
-		$fields = array('name'=>'steven', 'role'=>'admin');
-		$user->validation( $fields, array($user->validations_all, $user->validations_insert), 'new' );
-		
-	}
 }

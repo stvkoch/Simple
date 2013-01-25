@@ -77,9 +77,20 @@ class Model
 
   public function callValidation($callName, $opts)
   {
-    preg_match('@\s*([^\(|\)]+)?\s*(\(\s*(.*)\s*\))?\s*@', $callName, $matches);
-    if(isset($matches[3]))
-      $opts['config'] = $matches[3];
+    //detetc string
+    if(preg_match('@^\s*([^\(|\)]+)?\s*(\(\s*([^\[|\]]*)\s*\))?\s*$@', $callName, $matches))
+    {
+      if(isset($matches[3])){ 
+        $opts['config'] = $matches[3]; 
+      }
+    //detetc array
+    }
+    elseif(preg_match('@\s*([^\(|\)|\[|\]]+)?\s*(\(\s*\[\s*(.+)\s*\]\s*\))\s*$@', $callName, $matches))
+    {
+      if(isset($matches[3])){
+        $opts['config'] = explode(',',$matches[3]);
+      }
+    }      
     call_user_func($matches[1], $opts);
   }
 
