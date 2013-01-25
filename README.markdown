@@ -1,7 +1,7 @@
 # Simple Components
 
 
-[![Build Status Simple stvkoch by travis-ci](https://api.travis-ci.org/stvkoch/Simple.png)](http://travis-ci.org/stvkoch/Simple)(green tests passed) (red tests failed)
+[![Build Status Simple stvkoch by travis-ci](https://api.travis-ci.org/stvkoch/Simple.png)](http://travis-ci.org/stvkoch/Simple)(green tests passed) (red tests failed - bug found!)
 
 
 Simple Components helps build their bundled applications simply. Unpretentious way we want to help you save time and less development efforts.
@@ -84,7 +84,7 @@ Example file configuration. config/database.php
 User Model
 
 	<?php
-	namespace \Model;
+	namespace Model;
 
 	class User extends \Simple\Model\Model {
 
@@ -92,7 +92,7 @@ User Model
 
 		public $validations_all = array(
 			'name' => array(
-				''\Simple\Model\Validation\String::contains([foo,bar])',
+				'\Simple\Model\Validation\String::contains([foo,bar])',
 				'\Simple\Model\Validation\String::required', 
 				'\Simple\Model\Validation\String::notLessThat(20)'
 			),
@@ -124,28 +124,29 @@ User Model
 
 	  public function insert( $fields ){
 	  	try{
-
-	  		}catch( ValidationException $e ){
-
-	  		}
+	  		parent::insert( $fields );
+	  	}catch( ValidationException $e ){
+	  		foreach($e->getMessages() as $erros )
+	  			echo $e->getMessage();
+	  	}
 	  }
 	}
-	//Alias User()
-	function User(){
-	  static $user;
-	  if(!isset($user))
-	    $user = new \Model\User();
-	  
-	  return $user;
-	}
 
-	function myValRequired( $opts ){
-		if($opts['valeu']=='') new \Simple\Model\Exception\InvalidValue($opts['fieldName']' Required!');
-	}
-	function myValLess( $opts ){}
+
+### Tests
+
 
 @Tests
 - travis-ci-tests/Config/ConfigTest.php
+	
+	cd Simple
+	phpunit.phar --debug .
+
+
+## Install
+
+	cd ..../yourvendordirectory
+	git clone git@github.com:stvkoch/Simple.git Simple
 
 
 this work in progress.
