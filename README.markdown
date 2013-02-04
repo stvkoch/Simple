@@ -119,7 +119,14 @@ User Model
 
 	  //generic find method
 	  public function find($where='', $valuesBind=array(), $opts=array()){
-	    return User()->select('users.*, images.*, count(highlights.id) as totalHighlights', $where, $valuesBind, $opts+array('left'=>array('highlight', 'images'), 'group'=>'users.id', 'order'=>'name'));//get all user wth paginator
+	    return $this->select(
+	    	'users.*, images.*, count(highlights.id) as totalHighlights', 
+	    	$where, 
+	    	$valuesBind, 
+	    	$opts+array('left'=>array('highlight', 'images'), 
+	    	'group'=>'users.id', 
+	    	'order'=>'name')
+	    );
 	  }
 
 	  public function insert( $fields ){
