@@ -2,11 +2,11 @@
 namespace Simple\Config;
 /**
  * Work like a container DI. And wrap config.
- * \Simple\Config\Config::get(__CLASS__, 'attribute_name');
+ * \Simple\Config\PHP::get(__CLASS__, 'attribute_name');
  * 
  * @author steven koch <steven.koch@co.sapo.pt>
 */
-class Config {
+class PHP {
 
   static $_config = array();
 
@@ -38,6 +38,12 @@ class Config {
 
   static public function get( $scope, $attributeName, $default=null )
   {
+    if(is_array($scope))
+    {
+      if(isset($scope[2])) $default = $scope[2];
+      $attributeName = $scope[1];
+      $scope = $scope[0];
+    }
 
     if(!isset(self::$_config[$scope])) self::readClassConfig( $scope );
     $value = isset(self::$_config[$scope][$attributeName]) ? self::$_config[$scope][$attributeName] : $default ;

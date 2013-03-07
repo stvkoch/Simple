@@ -9,15 +9,15 @@ namespace Simple\Model\Result;
 *   $artigos->hasPreviousPage()
 *
 *   foreach( $artigos as $artigo ){
-*     
+*
 *   }
 *   @author steven koch <steven.koch@co.sapo.pt>
-* 
+*
 *   @depents \Simple\Model\Model
 */
-class Result implements \Iterator
+class Base implements \Iterator
 {
-  
+
   const DEFAULT_FETCH_TYPE = \PDO::FETCH_ASSOC;//PDO::FETCH_OBJ;
 
   protected $_sth;
@@ -28,6 +28,8 @@ class Result implements \Iterator
   protected $_i=0;
   protected $_row;
   protected $_count=null;
+  protected $_defaultStrategyClass='Simple\Model\Result\StrategyToJSON';
+
 
   //return new Result($sth->execute($valuesBinds), $this, $where, $valuesBinds, $opts);
   public function __construct(&$sth, \Simple\Model\Model $model, $where, $values_binds=array(), $opts=array())
@@ -43,14 +45,14 @@ class Result implements \Iterator
 
   //your stuff initializations
   protected function _init(){}
-  
+
 
   //public function count($where='', $valuesBinds=array(), $opts=array(), $optsCount=array()){
   public function count()
   {
     if($this->_count==null)
       $this->_count=$this->_model->count($this->_where, $this->_valuesBinds, $this->_opts);//from sql builder
-    return $this->_count; 
+    return $this->_count;
   }
 
   //iterator
@@ -97,5 +99,6 @@ class Result implements \Iterator
     $total = $this->count()/$this->_opts['offset'];
     return (!$total)? 1 : ceil($total);
   }
-  
+
+
 }

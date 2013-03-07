@@ -1,9 +1,9 @@
 <?php
 
-require_once 'Config/Config.php';
+require_once 'Config/PHP.php';
 
-require_once 'Model/Model.php';
-require_once 'Model/Result/Result.php';
+require_once 'Model/Base.php';
+require_once 'Model/Result/Base.php';
 
 require_once 'Model/Validation/Validations.php';
 
@@ -17,6 +17,16 @@ class ModelTest extends PHPUnit_Framework_TestCase
 	protected function setUp()
     {
     }
+
+    public function testSingletonBase()
+	{
+		$this->assertInstanceOf('\Simple\Model\Base', \Models\User::instance() );
+	}
+
+	public function testSingletonUser()
+	{
+		$this->assertInstanceOf('\Models\User', \Models\User::instance() );
+	}
 
 	public function testInsertSQL()
 	{
@@ -50,7 +60,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
 		$user = new \Models\User();
 		$sql = "SELECT COUNT(*) AS total FROM users WHERE date>?";
 		$this->assertEquals( $sql , $user->_buildSthSelectCount('date>?', array('order'=>'id', 'page'=>0, 'group'=>'date')) );
-		
 	}
 
 }

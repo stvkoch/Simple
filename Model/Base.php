@@ -6,47 +6,56 @@ namespace Simple\Model;
 * Exemplo:
 *   $result->count()
 *
-* 
+*
 * @author steven koch <steven.koch@co.sapo.pt>
 */
 
 /* *
-* @depents \Simple\Result\Result
+* @depents \Simple\Config\PHP
+* @depents \Simple\Result\Base
 * @depents \Simple\Model\Exception\InvalidValue
 * @depents \Simple\Model\Exception\Invalid
 */
 
-class Model
+class Base
 {
 
-  /*protected*/ public $resultClassName = '\Simple\Model\Result\Result';
+  protected $resultClassName = '\Simple\Model\Result\Base';
 
-  public $tableName = '';
+  protected $tableName = '';
 
-  public $joinsMap = array();
+  protected $joinsMap = array();
 
-  public $perPage = 20;
+  protected $perPage = 20;
 
-  public static $handler = null;
+  public static $instance = null;
+
+  public static $configHandlerLocation = array('Model', 'handler' );
 
   public $validations_all = array();
   public $validations_insert = array();
   public $validations_update = array();
 
-  static public function setHandler( $handler )
-  {
-    self::$handler = $handler;
-  }
 
+  //lazy load handler provide by \Simple\Config\PHP::get( self::$configHandlerLocation );
   static private function handler()
   {
-    return self::$handler;
+    return \Simple\Config\PHP::get( \Simple\Model\Base::$handlerConfigLocation );
   }
 
 
   public function __invoke()
   {
     return self::handler();
+  }
+
+  static public function instance()
+  {
+    if(is_null(self::$instance)){
+      $className = \get_called_class();
+      self::$instance = new $className();
+    }
+    return self::$instance;
   }
 
 
@@ -64,33 +73,31 @@ class Model
             $this->callValidation($callItem, $opts);
           }else
             $this->callValidation($call, $opts);
-          
         } catch (\Simple\Model\InvalidValue $e) {
           $msgs[] = $e;
         }
 
         if(count($msgs)) throw new \Simple\Model\ValidationException($msgs);
-        
       }
     return $msgs;
   }
 
   public function callValidation($callName, $opts)
   {
-    //detetc string
+    //detect string
     if(preg_match('@^\s*([^\(|\)]+)?\s*(\(\s*([^\[|\]]*)\s*\))?\s*$@', $callName, $matches))
     {
       if(isset($matches[3])){ 
         $opts['config'] = $matches[3]; 
       }
-    //detetc array
+    //detect array
     }
     elseif(preg_match('@\s*([^\(|\)|\[|\]]+)?\s*(\(\s*\[\s*(.+)\s*\]\s*\))\s*$@', $callName, $matches))
     {
       if(isset($matches[3])){
         $opts['config'] = explode(',',$matches[3]);
       }
-    }      
+    }
     call_user_func($matches[1], $opts);
   }
 
@@ -112,7 +119,7 @@ class Model
   //->update(array('nome'=>'steven'), 'id = ? AND date > ?', array(1, '14-12-1975'));
   public function update($fields, $where, $values_binds=array())
   {
-    
+
     $this->validation( $fields, array($this->validations_all, $this->validations_update), 'update' );
 
     try {
@@ -173,7 +180,8 @@ class Model
     $sth = self::handler()->prepare($this->_buildSthSelect($select, $where, $opts));
     $this->_bindParams($sth, $this->_buildSthBindParams($values_binds));
     $sth->execute();
-    return new $this->_resultClassName ($sth, $this, $where, $values_binds, $opts);
+    $result = new $this->_resultClassName($sth, $this, $where, $values_binds, $opts);
+    return $result;
   }
 
   //->one('id=?', array(1));
@@ -208,7 +216,6 @@ class Model
   /*protected*/ public function _bindParams($sth, $values_binds){
     foreach ($values_binds as $key => $value) {
       if(is_int($key)){
-        
         $sth->bindValue($key+1, $value);
       }else{
 

@@ -1,9 +1,9 @@
 <?php
 
-require_once 'Config/Config.php';
+require_once 'Config/PHP.php';
 
-require_once 'Model/Model.php';
-require_once 'Model/Result/Result.php';
+require_once 'Model/Base.php';
+require_once 'Model/Result/Base.php';
 
 require_once 'Model/Validation/String.php';
 require_once 'Model/Validation/Int.php';

@@ -1,7 +1,6 @@
 <?php
 
 namespace Simple\Model\Validation;
-error_reporting(-1);
 /**
 * '\Simple\Model\Validation\String::required', 
 * '\Simple\Model\Validation\String::notLessThat(20)'),
@@ -32,7 +31,6 @@ class String
 				throw new \Simple\Model\Exception\InvalidValue($opts['fieldName'] . ' not equal that '.strlen($opts['value']));
 		}elseif( $opts['value']!=$opts['config'] )
 			throw new \Simple\Model\Exception\InvalidValue($opts['fieldName'] . ' not equal that '.strlen($opts['value']));
-			
 	}
 
 }

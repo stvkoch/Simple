@@ -1,8 +1,7 @@
 <?php
 namespace Simple\Model\Validation;
 /**
-* '\Simple\Model\Validation\Validations::required', 
-* '\Simple\Model\Validation\Validations::notLessThat(20)'),
+* '\Simple\Model\Validation\Int::required'
 */
 class Int
 {

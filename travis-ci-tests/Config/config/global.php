@@ -12,8 +12,8 @@ return array(
 		{
 			$instance = new stdClass();
 			$instance->count = $instance->singleton = 0;
-			$instance->username = \Simple\Config\Config::get('global', 'username', 'defaultValue');
-			$instance->password = \Simple\Config\Config::get('global', 'password', 'defaultValue');
+			$instance->username = \Simple\Config\PHP::get('global', 'username', 'defaultValue');
+			$instance->password = \Simple\Config\PHP::get('global', 'password', 'defaultValue');
 			$instance->singleton++;
 		}
 		$instance->count++;

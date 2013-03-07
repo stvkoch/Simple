@@ -10,27 +10,27 @@ Simple Components helps build their bundled applications simply. Unpretentious w
 
 ## Features
 
-* \Simple\Config\Config
+* \Simple\Config\PHP
 	It is a class that manages configuration files, you can use it as a DI containers.
 * \Simple\Model\Model
 	Basically helps build your SQL queries. Returning the data encapsulated in a class that helps you interact on loops and pager feature.
 
 
-### \Simple\Config\Config
+### \Simple\Config\PHP
 
 Returns the value of an attribute of a specific configuration file.
 
-	\Simple\Config\Config::get('global', 'attributeName', 'defaultValue');
+	\Simple\Config\PHP::get('global', 'attributeName', 'defaultValue');
 
 Set transversal configuration value, this is not persiste values on files.
 
-	\Simple\Config\Config::set('global', 'attributeName', 'attributeValue');
+	\Simple\Config\PHP::set('global', 'attributeName', 'attributeValue');
 
 
 #### Example config file
-
+[config_file](#config_file)
 Example file configuration. config/database.php
-	
+
 	<?php
 	return = array(
 		'dsn' => 'mysql:dbname=testdb;host=127.0.0.1',
@@ -43,9 +43,9 @@ Example file configuration. config/database.php
 			if(is_null($_handler)){
 				try {
 				    $_handler = new \PDO(
-				    	\Simple\Config\Config::get('database', 'dsn'), 
-				    	\Simple\Config\Config::get('database', 'username'), 
-				    	\Simple\Config\Config::get('database', 'password')
+				    	\Simple\Config\PHP::get('database', 'dsn'), 
+				    	\Simple\Config\PHP::get('database', 'username'), 
+				    	\Simple\Config\PHP::get('database', 'password')
 				    );
 				} catch (\PDOException $e) {
 				    echo 'Connection failed: ' . $e->getMessage();
@@ -58,7 +58,7 @@ Example file configuration. config/database.php
 
 
 ### \Simple\Model\Model
-
+[sql_file](#sql_file)
 #### Example table
 
 	CREATE  TABLE `users` (
@@ -80,13 +80,13 @@ Example file configuration. config/database.php
 
 
 #### Models files
-
+[model_file](#model_file)
 User Model
-
+//Model/User.php
 	<?php
 	namespace Model;
 
-	class User extends \Simple\Model\Model {
+	class User extends \Simple\Model\Base {
 
 		public $tableName = 'users';
 
@@ -110,34 +110,47 @@ User Model
 			),
 		);
 
+		public $joinsMap = array(
+		'posts'=>'posts ON posts.userId=users.id',
+		'images'=>'images ON images.id=imagesUsers.imageId RIGHT JOIN imagesUsers.userId=users.id'
+		);
 
+		//generic find method
+		public function find($where='', $valuesBind=array(), $opts=array()){
+			return $this->select(
+				'users.*, images.*, count(highlights.id) as totalHighlights', 
+				$where, 
+				$valuesBind, 
+				$opts+array('left'=>array('highlight', 'images'), 
+				'group'=>'users.id', 
+				'order'=>'name')
+			);
+		}
 
-	  public $joinsMap = array(
-	    'posts'=>'posts ON posts.userId=users.id',
-	    'images'=>'images ON images.id=imagesUsers.imageId RIGHT JOIN imagesUsers.userId=users.id'
-	  );
-
-	  //generic find method
-	  public function find($where='', $valuesBind=array(), $opts=array()){
-	    return $this->select(
-	    	'users.*, images.*, count(highlights.id) as totalHighlights', 
-	    	$where, 
-	    	$valuesBind, 
-	    	$opts+array('left'=>array('highlight', 'images'), 
-	    	'group'=>'users.id', 
-	    	'order'=>'name')
-	    );
-	  }
-
-	  public function insert( $fields ){
-	  	try{
-	  		parent::insert( $fields );
-	  	}catch( ValidationException $e ){
-	  		foreach($e->getMessages() as $erros )
-	  			echo $e->getMessage();
-	  	}
-	  }
 	}
+
+
+Example usage User Model
+[example_model_file](#example_model_file)
+
+[See Config File](#config_file)
+
+	<?php
+	//Config \Simple\Model\Base to get connection handler on \Simple\Config\PHP::get('database', 'handler')
+	\Simple\Model\Base::$handlerConfigLocation = array('database', 'handler');
+
+
+	$userModel = new \Model\User(); // or $userModel = \Model\User::instance();
+	$usersResult = $userModel->find( 'id=?', array(1), array('limit'=>1) );
+
+	try{
+		//prevent SQL injection by prepare statements, all queries are prepare statements and execute bind values
+		$userModel->insert( array('name'=>$_POST['name'], 'email'=>$_POST['email'] ) );
+	}catch( ValidationException $e ){
+		foreach($e->getMessages() as $erros )
+			echo $e->getMessage();
+	}
+
 
 
 ### Tests

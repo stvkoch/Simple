@@ -2,13 +2,12 @@
 namespace Models;
 /**
  * Model User
- * 
-
+ *
  * User()->one('id=?', array(1));
  * User()->all('date>?', array('14-12-1975'), array('order'=>'id', 'page'=>1, 'offset'=>12'));
  */
 
-class User extends \Simple\Model\Model{
+class User extends \Simple\Model\Base{
 
   public $tableName = 'users';
 

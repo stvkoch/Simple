@@ -15,5 +15,4 @@ class Validations
 		if(!isset($opts['value']) || is_null($opts['value']) || strlen($opts['value']) < (int)$opts['config'] )
 			throw new \Simple\Model\Exception\InvalidValue($opts['fieldName'] . ' field required more that '.$opts['config']. ' actually lenght are '.strlen($opts['value']));
 	}
-
 }
