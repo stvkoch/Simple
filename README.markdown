@@ -16,6 +16,42 @@ Simple Components helps build their bundled applications simply. Unpretentious w
 	Basically helps build your SQL queries. Returning the data encapsulated in a class that helps you interact on loops and pager feature.
 
 
+## Install
+
+### Via Composer
+
+Install composer in your project:
+
+	curl -s https://getcomposer.org/installer | php
+
+
+Create a composer.json file in your project root:
+
+	{
+	    "require": {
+	        "stvkoch/Simple": "*"
+	    }
+	}
+
+
+Install via composer:
+
+	php composer.phar install
+
+
+Add this line to your application’s index.php file:
+
+	<?php
+	require 'vendor/autoload.php';
+
+
+### Manual Install
+
+	cd ~/yourprojectFolder/vendor
+	git clone git@github.com:stvkoch/Simple.git Simple
+
+
+
 ### \Simple\Config\PHP
 
 Returns the value of an attribute of a specific configuration file.
