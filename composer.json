@@ -1,9 +1,9 @@
 {
-    "name": "stvkoch/Simple",
+    "name": "stvkoch/simple",
     "type": "library",
     "description": "Very Simple Model/SQL Buidler and Config Libray",
     "keywords": ["microframework","Config","Model", "SQL Builder"],
-    "homepage": "http://github.com/stvkoch/Simple",
+    "homepage": "http://github.com/stvkoch/simple",
     "license": "MIT",
     "authors": [
         {
