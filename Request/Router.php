@@ -9,7 +9,8 @@ class Router
 		'module'=>'Frontend',
 		'controller'=>'index',
 		'action'=>'index',
-		'format'=>'html'
+		'format'=>'html',
+		'params'=>array()
 	);
 
 	protected $_routers=array(
@@ -38,6 +39,7 @@ class Router
 
 	public function getResourceByURI($uri)
 	{
+		return $this->translate($uri);
 		$uri = $this->translate($uri);
 
 		$resourceId = $this->_resourceId;
@@ -58,34 +60,33 @@ class Router
 
 	public function translate($uri)
 	{
+		$resourceId = $this->_resourceId;
 		$routers = $this->_routers;
 		$_continue = false;
-		foreach ($routers as $regxURI => $route){
-			$count = 0;
+		foreach ($routers as $regxURI => $route)
+		{
 
-			if(preg_match( $regxURI, $uri, $matches)){
-			    if(isset($route['_continue'])){
+			if(preg_match( $regxURI, $uri, $matches))
+			{
+				if(isset($route['_continue'])){
 					$_continue = $route['_continue'];
 					unset($route['_continue']);
 				}
-
-				if(isset($route['format'])){
-					$this->_resourceId['format'] = $route['format'];
-					unset($route['format']);
-				}
-
-				if(isset($route['module'])){
-					$this->_resourceId['module'] = $route['module'];
-					unset($route['module']);
-				}
-
-				$uri = preg_replace( $regxURI, join('/', $route), $uri, 1, $count );
-
-				if( $count > 0 && !$_continue )
-					return $uri;
+				foreach ($route as $resourceType => $positionMatch) 
+				{
+					if(preg_match('/\$([0-9]+)/',$positionMatch, $position))
+						$resourceId[$resourceType] = $matches[(int)$position[1]];
+					else
+						$resourceId[$resourceType] = $positionMatch;
+			    }
+				if( !$_continue )
+					break;
 			}
 		}
 
-		return $uri;
+		if(is_string($resourceId['params']))
+			parse_str($resourceId['params'], $resourceId['params']);
+
+		return $resourceId;
 	}
 }

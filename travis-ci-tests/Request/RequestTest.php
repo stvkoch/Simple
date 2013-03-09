@@ -30,7 +30,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
 	public function testRouter()
 	{
-		$_SERVER['REQUEST_URI'] = '/xpto/okidoki';
+		$_SERVER['REQUEST_URI'] = '/as1/xpto2/okidoki3';
 		$_SERVER['REQUEST_METHOD'] = 'TEST';
 		$_SERVER['QUERY_STRING'] = 'foo=1&bar=2';
 		$request = new \Simple\Request\HTTP( $_SERVER, $_REQUEST, $_FILES );
@@ -39,14 +39,15 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$router = new \Simple\Request\Router( $routes );
 
 		$resource = array(
-			"module"=>"Frontend",
-			"controller"=>"Firstcontroller",
+			"module"=>"as1",
+			"controller"=>"xpto2",
 			"action"=>"firstaction",
 			"format"=>"html",
 			"params"=>array()
 		);
-
-		$this->assertEquals($resource, $router->getResourceByURI($request->getURI()));
+		$resourceFromRoute = $router->getResourceByURI($request->getURI());
+		//var_dump($request->getURI(),$resource, $resourceFromRoute);
+		$this->assertEquals($resource, $resourceFromRoute);
 
 	}
 
@@ -62,13 +63,15 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
 		$resource = array(
 			"module"=>"Frontend",
-			"controller"=>"Xpto",
-			"action"=>"okidoki",
+			"controller"=>"index",
+			"action"=>"index",
 			"format"=> "json",
 			"params"=>array()
 		);
 
-		$this->assertEquals($resource, $router->getResourceByURI($request->getURI()));
+		$resourceFromRoute = $router->getResourceByURI($request->getURI());
+
+		$this->assertEquals($resource, $resourceFromRoute);
 	}
 
 }
