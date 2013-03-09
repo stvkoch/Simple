@@ -53,33 +53,6 @@ Add this line to your application’s index.php file:
 
 
 
-### \Simple\Request\HTTP
-
-	$request = new \Simple\Request\HTTP( $_SERVER, $_REQUEST, $_FILES );
-	$request->getURL();
-	$request->getURI();
-	$request->getParam('name');
-
-
-
-
-### \Simple\Request\Router
-
-	//config/routes.php
-	<?php
-	return array(
-		'@\.json$@'=>array('format'=>'json', '_continue'=>true),
-		'@^/([^/]+)/([^/]+)@'=>array('controller'=>'$1', 'action'=>'$2'),
-	);
-
-
-	$routes = \Simple\Config\PHP::getScope('routes');
-	$router = new \Simple\Request\Router( $routes );
-	$resourceFromRoute = $router->getResourceByURI($request->getURI()); //return array represent one resource
-
-
-
-
 ### \Simple\Config\PHP
 
 Returns the value of an attribute of a specific configuration file.
@@ -118,6 +91,33 @@ Example file configuration. config/database.php
 			return $_handler;
 		}
 	);
+
+
+
+
+### \Simple\Request\HTTP
+
+	$request = new \Simple\Request\HTTP( $_SERVER, $_REQUEST, $_FILES );
+	$request->getURL();
+	$request->getURI();
+	$request->getParam('name');
+	$request->getFile('filename');
+
+
+
+### \Simple\Request\Router
+
+	//config/routes.php
+	<?php
+	return array(
+		'@\.json$@'=>array('format'=>'json', '_continue'=>true),
+		'@^/([^/]+)/([^/]+)@'=>array('controller'=>'$1', 'action'=>'$2'),
+	);
+
+
+	$routes = \Simple\Config\PHP::getScope('routes');
+	$router = new \Simple\Request\Router( $routes );
+	$resourceFromRoute = $router->getResourceByURI($request->getURI()); //return array represent one resource
 
 
 
