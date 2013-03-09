@@ -9,13 +9,14 @@ namespace Models;
 
 class User extends \Simple\Model\Base{
 
-  public $tableName = 'users';
+  protected $tableName = 'users';
 
 
-  public $joinsMap = array(
+  private $joinsMap = array(
     'highlight'=>'highlights ON highlights.userId=users.id',
     'images'=>'images ON images.id=images_users.imageId RIGHT JOIN imagesUsers.userId=users.id'
   );
+
 
   /**
    * \ClassName
@@ -36,24 +37,34 @@ class User extends \Simple\Model\Base{
           '\Simple\Model\Validation\Validations::notLessThat(20)'
       ),
   );
-public $validations_update = array(
+  public $validations_update = array(
       'name' => array(
           '\Simple\Model\Validation\Validations::required', 
           '\Simple\Model\Validation\Validations::notLessThat(20)'
       ),
   );
 
+  public function setPost($value='')
+  {
+    # code...
+  }
+  public function getPostByUserId( $userId )
+  {
+    return \Example\Model\Post()->find('user_id=?' , array($userId));
+  }
 
   //generic find method
-  public function find($where='', $valuesBind=array(), $opts=array()){
+  public function find($where='', $valuesBind=array(), $opts=array())
+  {
     return User()->select('users.*, images.*, count(highlights.id) as totalHighlights', $where, $valuesBind, $opts+array('left'=>array('highlight', 'images'), 'group'=>'users.id', 'order'=>'name'));//get all user wth paginator
   }
 }
+
+
 //Alias User()
 function User(){
   static $user;
   if(!isset($user))
     $user = new \Example\Model\User();
-  
   return $user;
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Simple\Request;
 /**
-* 
+* $request = new \Simple\Request\Base( $server["REQUEST_URI"], $server["QUERY_STRING"], $server["REQUEST_METHOD"], $_REQUEST  );
 */
 class Base
 {
@@ -16,15 +16,15 @@ class Base
 	protected $_params=array();
 
 	/**
-	* \Simple\Request\HTTP( '/path/to/resource', 'foo=fooX&bar=barY', 'REDIRECT', $_POST );
+	* \Simple\Request\Base( '/path/to/resource', 'foo=fooX&bar=barY', 'REDIRECT', $_POST );
 	*/
 	function __construct($env=null, $query=null, $method=null, $params=array())
 	{
-		$this->_uri=$env;
-		$this->_query=$query;
-		$this->_method=$method;
-		$this->_params=$params;
-		$this->_parameteriseQuery($this->_query);
+		if(!is_null($env)) $this->_uri=$env;
+		if(!is_null($query)) $this->_query=$query;
+		if(!is_null($method)) $this->_method=$method;
+		if(count($params)) $this->_params=$params;
+		if(!is_null($query)) $this->_parameteriseQuery($this->_query);
 	}
 
 	protected function _parameteriseQuery($query)

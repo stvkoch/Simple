@@ -1,24 +1,26 @@
 <?php
 namespace Simple\Model\Result;
 /**
-*   $artigos = Articles::get_list( $_GET['page'] )
+*   $articlesModel = new Articles();
+*   $articles = $articlesModel->get_list( $_GET['page'] )
 *
-*   $artigos->currentPage()
-*   $artigos->totalPages()
-*   $artigos->hasNextPage()
-*   $artigos->hasPreviousPage()
+*   $articles->currentPage()
+*   $articles->totalPages()
+*   $articles->hasNextPage()
+*   $articles->hasPreviousPage()
 *
-*   foreach( $artigos as $artigo ){
-*
+*   foreach( $articles as $article ){
+*     $articles->getUserById($artigo->userId);
+* 
 *   }
 *   @author steven koch <steven.koch@co.sapo.pt>
 *
-*   @depents \Simple\Model\Model
+*   @depents \Simple\Model\Base
 */
 class Base implements \Iterator
 {
 
-  const DEFAULT_FETCH_TYPE = \PDO::FETCH_ASSOC;//PDO::FETCH_OBJ;
+  const DEFAULT_FETCH_TYPE = \PDO::FETCH_OBJ;//PDO::FETCH_ASSOC;//PDO::FETCH_OBJ;
 
   protected $_sth;
   protected $_model;
@@ -28,7 +30,7 @@ class Base implements \Iterator
   protected $_i=0;
   protected $_row;
   protected $_count=null;
-  protected $_defaultStrategyClass='Simple\Model\Result\StrategyToJSON';
+
 
 
   //return new Result($sth->execute($valuesBinds), $this, $where, $valuesBinds, $opts);
@@ -78,6 +80,21 @@ class Base implements \Iterator
     return $this->_row;
   }
 
+  public function model()
+  {
+    return $this->_model;
+  }
+
+  public function getTableName()
+  {
+    return $this->tableName;
+  }
+
+  public function __call($callName, $args)
+  {
+    return call_user_func_array(array($this->_model, $callName), $args);
+  }
+
 
   //@paginator stuffs
   public function previousPage(){
@@ -99,6 +116,7 @@ class Base implements \Iterator
     $total = $this->count()/$this->_opts['offset'];
     return (!$total)? 1 : ceil($total);
   }
+
 
 
 }
