@@ -52,6 +52,34 @@ Add this line to your application’s index.php file:
 
 
 
+
+### \Simple\Request\HTTP
+
+	$request = new \Simple\Request\HTTP( $_SERVER, $_REQUEST, $_FILES );
+	$request->getURL();
+	$request->getURI();
+	$request->getParam('name');
+
+
+
+
+### \Simple\Request\Router
+
+	//config/routes.php
+	<?php
+	return array(
+		'@\.json$@'=>array('format'=>'json', '_continue'=>true),
+		'@^/([^/]+)/([^/]+)@'=>array('controller'=>'$1', 'action'=>'$2'),
+	);
+
+
+	$routes = \Simple\Config\PHP::getScope('routes');
+	$router = new \Simple\Request\Router( $routes );
+	$resourceFromRoute = $router->getResourceByURI($request->getURI()); //return array represent one resource
+
+
+
+
 ### \Simple\Config\PHP
 
 Returns the value of an attribute of a specific configuration file.
@@ -151,6 +179,15 @@ User Model
 		'images'=>'images ON images.id=imagesUsers.imageId RIGHT JOIN imagesUsers.userId=users.id'
 		);
 
+		/**
+		 * $usersModel = new \Model\User();
+		 * $users = $usersModel->find('id=?', array($userId));
+		 * $posts = $users->getPost( $users[0]->id );
+		 */
+		public getPost($userId ){
+			return \Model\Post::find('user_id=?', array($userId));
+		}
+
 		//generic find method
 		public function find($where='', $valuesBind=array(), $opts=array()){
 			return $this->select(
@@ -172,13 +209,13 @@ Example usage User Model
 [See Config File](#config_file)
 
 	<?php
-	//Config \Simple\Model\Base to get connection handler on \Simple\Config\PHP::get('database', 'handler')
+	//Set where \Simple\Model find PDO handler, in this case \Simple\Config\PHP::get('database', 'handler')
 	\Simple\Model\Base::$handlerConfigLocation = array('database', 'handler');
 
 
 	$userModel = new \Model\User(); // or $userModel = \Model\User::instance();
 	$usersResult = $userModel->find( 'id=?', array(1), array('limit'=>1) );
-
+	$posts = $usersResult->getPost( $usersResult[0]->id );
 	try{
 		//prevent SQL injection by prepare statements, all queries are prepare statements and execute bind values
 		$userModel->insert( array('name'=>$_POST['name'], 'email'=>$_POST['email'] ) );
@@ -189,8 +226,9 @@ Example usage User Model
 
 
 
-### Tests
 
+
+### Tests
 
 @Tests
 - travis-ci-tests/Config/ConfigTest.php
@@ -199,10 +237,4 @@ Example usage User Model
 	phpunit.phar --debug .
 
 
-## Install
-
-	cd ..../yourvendordirectory
-	git clone git@github.com:stvkoch/Simple.git Simple
-
-
-this work in progress.
+Truly functional, but work in progress. New components are added constantly
