@@ -12,7 +12,7 @@ class User extends \Simple\Model\Base{
   protected $tableName = 'users';
 
 
-  private $joinsMap = array(
+  public $joinsMap = array(
     'highlight'=>'highlights ON highlights.userId=users.id',
     'images'=>'images ON images.id=images_users.imageId RIGHT JOIN imagesUsers.userId=users.id'
   );

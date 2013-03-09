@@ -49,4 +49,15 @@ class Base
 		return $this->_method;
 	}
 
+	public function getURI()
+	{
+		return $this->_uri;
+	}
+
+	public function getQuery()
+	{
+		return $this->_query;
+	}
+
+
 }
