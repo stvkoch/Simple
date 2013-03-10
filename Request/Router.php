@@ -5,7 +5,8 @@ namespace Simple\Request;
 */
 class Router
 {
-	protected $_resourceId = array(
+	//default resource
+	protected $_resource = array(
 		'module'=>'Frontend',
 		'controller'=>'index',
 		'action'=>'index',
@@ -28,7 +29,7 @@ class Router
 	public function __construct(array $routers, $defaultResource=null)
 	{
 		$this->addRouters($routers);
-		if(!is_null($defaultResource)) $this->_resourceId = $defaultResource;
+		if(!is_null($defaultResource)) $this->_resource = $defaultResource;
 	}
 
 	public function addRouters($routers)
@@ -40,27 +41,11 @@ class Router
 	public function getResourceByURI($uri)
 	{
 		return $this->translate($uri);
-		$uri = $this->translate($uri);
-
-		$resourceId = $this->_resourceId;
-
-		if(0===($pos = strpos($uri, '/')))
-			$uri = substr($uri, 1);
-		$paramsURS = explode('/', $uri);
-
-		$controller = array_shift($paramsURS);
-		if($controller)
-		    $resourceId['controller'] = ucfirst( strtolower($controller) );
-		$action = array_shift($paramsURS);
-		if($action)
-		    $resourceId['action'] = strtolower($action);
-		$resourceId['params'] = $paramsURS;
-		return $resourceId;
 	}
 
 	public function translate($uri)
 	{
-		$resourceId = $this->_resourceId;
+		$resource = $this->_resource;
 		$routers = $this->_routers;
 		$_continue = false;
 		foreach ($routers as $regxURI => $route)
@@ -74,19 +59,22 @@ class Router
 				}
 				foreach ($route as $resourceType => $positionMatch) 
 				{
-					if(preg_match('/\$([0-9]+)/',$positionMatch, $position))
-						$resourceId[$resourceType] = $matches[(int)$position[1]];
-					else
-						$resourceId[$resourceType] = $positionMatch;
+					if(is_int($positionMatch)){
+						$resource[$resourceType] = $matches[$positionMatch];
+					}elseif(strpos($positionMatch, '$')!==false){
+						$resource[$resourceType] = preg_replace($regxURI, $positionMatch, $uri);
+					}else{
+						$resource[$resourceType] = $positionMatch;
+					}
 			    }
 				if( !$_continue )
 					break;
 			}
 		}
 
-		if(is_string($resourceId['params']))
-			parse_str($resourceId['params'], $resourceId['params']);
+		if(is_string($resource['params']))
+			parse_str($resource['params'], $resource['params']);
 
-		return $resourceId;
+		return $resource;
 	}
 }

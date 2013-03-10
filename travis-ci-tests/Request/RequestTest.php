@@ -19,18 +19,18 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testRequest()
 	{
 
-		$_SERVER['REQUEST_URI'] = '/xpto/okidoki';
+		$_SERVER['REQUEST_URI'] = '/xpto/actionName';
 		$_SERVER['REQUEST_METHOD'] = 'TEST';
 		$_SERVER['QUERY_STRING'] = 'foo=1&bar=2';
 		$request = new \Simple\Request\HTTP( $_SERVER, $_REQUEST, $_FILES );
 
-		$this->assertEquals('http://phpunit.test/xpto/okidoki', $request->getURL());
+		$this->assertEquals('http://phpunit.test/xpto/actionName', $request->getURL());
 		$this->assertEquals(array('foo'=>1, 'bar'=>2) ,$request->getParams());
 	}
 
 	public function testRouter()
 	{
-		$_SERVER['REQUEST_URI'] = '/as1/xpto2/okidoki3';
+		$_SERVER['REQUEST_URI'] = '/moduleName/controllerName/actionName3';
 		$_SERVER['REQUEST_METHOD'] = 'TEST';
 		$_SERVER['QUERY_STRING'] = 'foo=1&bar=2';
 		$request = new \Simple\Request\HTTP( $_SERVER, $_REQUEST, $_FILES );
@@ -39,8 +39,8 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$router = new \Simple\Request\Router( $routes );
 
 		$resource = array(
-			"module"=>"as1",
-			"controller"=>"xpto2",
+			"module"=>"moduleName",
+			"controller"=>"controllerName",
 			"action"=>"firstaction",
 			"format"=>"html",
 			"params"=>array()
@@ -51,9 +51,31 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
 	}
 
+	public function testRouter2()
+	{
+		$_SERVER['REQUEST_URI'] = '/controllerName/show';
+		$_SERVER['REQUEST_METHOD'] = 'TEST';
+		$_SERVER['QUERY_STRING'] = 'foo=1&bar=2';
+		$request = new \Simple\Request\HTTP( $_SERVER, $_REQUEST, $_FILES );
+
+		$routes = \Simple\Config\PHP::getScope('routes');
+		$router = new \Simple\Request\Router( $routes );
+
+		$resource = array(
+			"module"=>"Frontend",
+			"controller"=>"\Vendor\Namespace\controllerName::show",
+			"action"=>"show",
+			"format"=>"html",
+			"params"=>array()
+		);
+		$resourceFromRoute = $router->getResourceByURI($request->getURI());
+		$this->assertEquals($resource, $resourceFromRoute);
+
+	}
+
 	public function testResourceJson()
 	{
-		$_SERVER['REQUEST_URI'] = '/xpto/okidoki.json';
+		$_SERVER['REQUEST_URI'] = '/xpto/actionName.json';
 		$_SERVER['REQUEST_METHOD'] = 'TEST';
 		$_SERVER['QUERY_STRING'] = 'foo=1&bar=2';
 		$request = new \Simple\Request\HTTP( $_SERVER, $_REQUEST, $_FILES );
