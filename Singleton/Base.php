@@ -1,7 +1,7 @@
 <?php
 namespace Simple\Singleton;
 
-abstract class Base implements Face{
+abstract class Base implements \Simple\Singleton\Face{
 
 	static private $_instance=null;
 

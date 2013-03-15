@@ -32,9 +32,9 @@ class Base
 
   public static $configHandlerLocation = array('Model', 'handler' );
 
-  public $validations_all = array();
-  public $validations_insert = array();
-  public $validations_update = array();
+  protected $validations_all = array();
+  protected $validations_insert = array();
+  protected $validations_update = array();
 
 
   //lazy load handler provide by \Simple\Config\PHP::get( self::$configHandlerLocation );
@@ -82,7 +82,7 @@ class Base
     return $msgs;
   }
 
-  public function callValidation($callName, $opts)
+  protected function callValidation($callName, $opts)
   {
     //detect string
     if(preg_match('@^\s*([^\(|\)]+)?\s*(\(\s*([^\[|\]]*)\s*\))?\s*$@', $callName, $matches))
@@ -213,7 +213,7 @@ class Base
 
   //@/*protected*/ publics ------------------------------------------------------------------------------------
 
-  /*protected*/ public function _bindParams($sth, $values_binds){
+  protected function _bindParams($sth, $values_binds){
     foreach ($values_binds as $key => $value) {
       if(is_int($key)){
         $sth->bindValue($key+1, $value);
@@ -226,7 +226,7 @@ class Base
   }
 
   //->all('COUNT(*)', array('14-12-1975'), array('order'=>'id', 'limit'=>1, 'offset'=>12'));
-  /*protected*/ public function _buildSthSelectCount($where='', $opts=array(), $optsCount=array()){
+  protected function _buildSthSelectCount($where='', $opts=array(), $optsCount=array()){
     //if(isset($opts['group'])) $optsCount['group']=$opts['group'];
     if(isset($opts['left'])) $optsCount['left']=$opts['left'];
     if(isset($opts['inner'])) $optsCount['inner']=$opts['inner'];
@@ -237,7 +237,7 @@ class Base
   }
 
   //->all('*', array('14-12-1975'), array('order'=>'id', 'limit'=>1, 'offset'=>12'));
-  /*protected*/ public function _buildSthSelect($select='', $where=array(), &$opts=array()){
+  protected function _buildSthSelect($select='', $where=array(), &$opts=array()){
     $sql = 'SELECT '.$select.' FROM '.$this->tableName;
     if(isset($opts['inner'])){
       if(is_array($opts['inner'])){
@@ -278,7 +278,7 @@ class Base
   }
 
   //->insert(array('name'=>'steven', 'role'=>'admin'))
-  /*protected*/ public function _buildSthInsert($fields){
+  protected function _buildSthInsert($fields){
     $keys = array_keys($fields);
     $sql = 'INSERT INTO ' . $this->tableName . ' ('.implode(', ', $keys);
     array_walk($keys, function(&$v){$v=':'.$v;});
@@ -287,7 +287,7 @@ class Base
   }
 
   //->update(array('nome'=>'steven'), 'id = ? AND date > ?', array(1, '14-12-1975'));
-  /*protected*/ public function _buildSthUpdate($fields, $where){
+  protected function _buildSthUpdate($fields, $where){
     $sql = 'UPDATE \''.$this->tableName.'\' SET  ';
     foreach ($fields as $key => $value) {
       $sql .= '\''.$key.'\'=:'.$key. ',' ;
@@ -300,11 +300,11 @@ class Base
   }
 
   //->delete('id = ? AND date > ?', array(1, '14-12-1975'));
-  /*protected*/ public function _buildSthDelete($where){
+  protected function _buildSthDelete($where){
     return 'DELETE FROM '.$this->tableName.' WHERE '.$where;
   }
 
-  /*protected*/ public function _buildSthBindParams(){
+  protected function _buildSthBindParams(){
     $args = func_get_args();
     $fields_binds = array();
     foreach ($args as $arg) {

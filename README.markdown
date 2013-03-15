@@ -145,8 +145,11 @@ Example file configuration. config/database.php
 
 #### Models files
 [model_file](#model_file)
+
 User Model
+
 //Model/User.php
+
 	<?php
 	namespace Model;
 
@@ -157,19 +160,19 @@ User Model
 		public $validations_all = array(
 			'name' => array(
 				'\Simple\Model\Validation\String::contains([foo,bar])',
-				'\Simple\Model\Validation\String::required', 
+				'\Simple\Model\Validation\String::required',
 				'\Simple\Model\Validation\String::notLessThat(20)'
 			),
 		);
 		public $validations_insert = array(
 			'name' => array(
-				'\Simple\Model\Validation\String::required', 
+				'\Simple\Model\Validation\String::required',
 				'\Simple\Model\Validation\String::notLessThat(20)'
 			),
 		);
 		public $validations_update = array(
 			'name' => array(
-				'\Simple\Model\Validation\String::required', 
+				'\Simple\Model\Validation\String::required',
 				'\Simple\Model\Validation\String::notLessThat(20)'
 			),
 		);
@@ -191,11 +194,11 @@ User Model
 		//generic find method
 		public function find($where='', $valuesBind=array(), $opts=array()){
 			return $this->select(
-				'users.*, images.*, count(highlights.id) as totalHighlights', 
-				$where, 
-				$valuesBind, 
-				$opts+array('left'=>array('highlight', 'images'), 
-				'group'=>'users.id', 
+				'users.*, images.*, count(highlights.id) as totalHighlights',
+				$where,
+				$valuesBind,
+				$opts+array('left'=>array('highlight', 'images'),
+				'group'=>'users.id',
 				'order'=>'name')
 			);
 		}

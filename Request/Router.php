@@ -14,7 +14,7 @@ class Router
 		'params'=>array()
 	);
 
-	protected $_routers=array(
+	protected $_routes=array(
 		'/^(\w+)(\/$|$)/'=> array(
 			'controller'=>'$1',
 			'action' =>'index'
@@ -26,15 +26,15 @@ class Router
 		)
 	);
 
-	public function __construct(array $routers, $defaultResource=null)
+	public function __construct(array $routes, $defaultResource=null)
 	{
-		$this->addRouters($routers);
+		$this->addRoutes($routes);
 		if(!is_null($defaultResource)) $this->_resource = $defaultResource;
 	}
 
-	public function addRouters($routers)
+	public function addRoutes($routes)
 	{
-		$this->_routers = $routers + $this->_routers;
+		$this->_routes = $routes + $this->_routes;
 	}
 
 
@@ -46,9 +46,9 @@ class Router
 	public function translate($uri)
 	{
 		$resource = $this->_resource;
-		$routers = $this->_routers;
+		$routes = $this->_routes;
 		$_continue = false;
-		foreach ($routers as $regxURI => $route)
+		foreach ($routes as $regxURI => $route)
 		{
 
 			if(preg_match( $regxURI, $uri, $matches))

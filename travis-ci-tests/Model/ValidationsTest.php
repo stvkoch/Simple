@@ -22,9 +22,20 @@ class ValidationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testValidationsInsert(){
 		$user = new \Models\User();
+		$class = new \ReflectionClass($user);
+        $validations_all = $class->getProperty('validations_all');
+        $validations_insert = $class->getProperty('validations_insert');
+        $validations_all->setAccessible(true);
+        $validations_insert->setAccessible(true);
+
+        $validations_all_val = $validations_all->getValue($user);
+        $validations_insert_val = $validations_insert->getValue($user);
+
+
+
 		$fields = array('name'=>'steven', 'role'=>'admin');
-		$user->validation( $fields, array($user->validations_all, $user->validations_insert), 'new' );
-		
+		$user->validation( $fields, array($validations_all_val, $validations_insert_val), 'new' );
+
 	}
 
 	/**
@@ -32,6 +43,7 @@ class ValidationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testValidationsString(){
 		$user = new \Models\User();
+
 		$fields = array('name'=>'steven', 'role'=>'admin');
 		$user->validation( $fields, array(
 			//validation_all

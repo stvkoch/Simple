@@ -1,6 +1,6 @@
 <?php
 return array(
-	
+
 	'projectName'=>'Simple',
 
 	'username'=>'yourusername',

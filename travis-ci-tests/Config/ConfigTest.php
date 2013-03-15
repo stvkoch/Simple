@@ -9,7 +9,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         \Simple\Config\PHP::$_path = __DIR__.'/config';
     }
 
-	public function testProjectname()
+	public function testStringreturn()
 	{
 		$this->assertEquals('Simple', \Simple\Config\PHP::get('global', 'projectName'));
 	}
