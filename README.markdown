@@ -155,32 +155,33 @@ User Model
 
 	class User extends \Simple\Model\Base {
 
-		public $tableName = 'users';
+		protected $tableName = 'users';
 
-		public $validations_all = array(
+		protected $validations_all = array(
 			'name' => array(
 				'\Simple\Model\Validation\String::contains([foo,bar])',
 				'\Simple\Model\Validation\String::required',
 				'\Simple\Model\Validation\String::notLessThat(20)'
 			),
 		);
-		public $validations_insert = array(
+		protected $validations_insert = array(
 			'name' => array(
 				'\Simple\Model\Validation\String::required',
 				'\Simple\Model\Validation\String::notLessThat(20)'
 			),
 		);
-		public $validations_update = array(
+		protected $validations_update = array(
 			'name' => array(
 				'\Simple\Model\Validation\String::required',
 				'\Simple\Model\Validation\String::notLessThat(20)'
 			),
 		);
 
-		public $joinsMap = array(
+		protected $joinsMap = array(
 		'posts'=>'posts ON posts.userId=users.id',
 		'images'=>'images ON images.id=imagesUsers.imageId RIGHT JOIN imagesUsers.userId=users.id'
 		);
+
 
 		/**
 		 * $usersModel = new \Model\User();

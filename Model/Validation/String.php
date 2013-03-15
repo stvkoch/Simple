@@ -3,8 +3,8 @@
 namespace Simple\Model\Validation;
 /**
 * '\Simple\Model\Validation\String::required', 
-* '\Simple\Model\Validation\String::notLessThat(20)'),
-* '\Simple\Model\Validation\String::equals(hello)'),
+* '\Simple\Model\Validation\String::notLessThat(20),
+* '\Simple\Model\Validation\String::contains([val1,val2,val3]),
 */
 class String
 {

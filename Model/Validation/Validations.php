@@ -1,8 +1,9 @@
 <?php
 namespace Simple\Model\Validation;
 /**
-* '\Simple\Model\Validation\Validations::required', 
-* '\Simple\Model\Validation\Validations::notLessThat(20)'),
+* Model pass by Validations value of field, fieldName of select query and 'config' value. Config field contain value that you insert on validation item in your model definition. 
+* Ex: \Simple\Model\Validation\Validations::notLessThat(20) 20 is config value
+* Ex: \Simple\Model\Validation\Validations::notLessThat(20) 20 is config value
 */
 class Validations
 {
