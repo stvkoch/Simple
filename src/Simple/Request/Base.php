@@ -13,6 +13,7 @@ class Base
 	protected $_uri;
 	protected $_query;
 	protected $_method;
+	protected $_resources=array();
 	protected $_params=array();
 
 	/**
@@ -44,6 +45,11 @@ class Base
 		return $this->_params;
 	}
 
+	public function mergeParams($params)
+	{
+		return $this->_params+=$params;
+	}
+
 	public function getMethod()
 	{
 		return $this->_method;
@@ -59,5 +65,14 @@ class Base
 		return $this->_query;
 	}
 
+	public function setResources($resources)
+	{
+		$this->_resources = $resources;
+	}
+
+	public function getResources()
+	{
+		return $this->_resources;
+	}
 
 }

@@ -1,5 +1,8 @@
 <?php
+require_once 'Singleton/Face.php';
+require_once 'Singleton/Base.php';
 
+require_once 'Config/Base.php';
 require_once 'Config/PHP.php';
 
 require_once 'Model/Base.php';
