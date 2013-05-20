@@ -4,16 +4,16 @@ namespace Simple\Middleware;
 
 abstract class Base
 {
-	private $_app;
-	private $_resource;
+	protected $app;
+	protected $resource;
 
 	public function setBackbone(&$app)
 	{
-		$this->_app = $app;
+		$this->app = $app;
 	}
 
-	public function setCurrentResource(&$resource)
+	public function setCurrentResource($resource)
 	{
-		$this->_resource = $resource;
+		$this->resource = $resource;
 	}
 }

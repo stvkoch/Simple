@@ -7,13 +7,16 @@ class Application extends \Simple\Middleware\Base
 
 	public function dispatch()
 	{
-		if( !isset($this->_resource['routesConfigFileName']) )
-			throw new Exception("@routesConfigFileName property is not defined in middleware definitions!", 1);
+		if( !isset($this->resource['routesFileNameConfig']) )
+		{
+			throw new \Exception("@routesFileNameConfig property is not defined in middleware definitions!", 1);
+		}
 
-		$routes = \Simple\Config\PHP::getScope($this->_resource['routesConfigFileName']);
+		$routes = \Simple\Config\PHP::getScope($this->resource['routesFileNameConfig']);
 		$router = new \Simple\Request\Router($routes );
-		$resourceFromRoutes = $router->getResourceByRequest($this->_app->request);
-		$this->_app->runResources($resourceFromRoutes);
+		$resourceFromRoutes = $router->getResourcesByRequest($this->app->request);
+
+		$this->app->runResources($resourceFromRoutes);
 	}
 
 }

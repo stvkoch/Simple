@@ -8,9 +8,9 @@ namespace Simple\Config;
 */
 class Base extends \Simple\Singleton\Base{
 
-  static $_config = array();
+  public $_config = array();
 
-  static $_path = 'config' ;
+  public $_path = 'config' ;
 
 
   static public function setPath( $newPath )

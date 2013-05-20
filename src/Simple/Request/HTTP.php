@@ -41,15 +41,18 @@ class HTTP extends \Simple\Request\Base
 
 	public function getURL()
 	{
-		$pageURL = 'http';
-		 if ($this->_https) {$pageURL .= "s";}
-		 $pageURL .= "://";
-		 if ( $this->_port != "80") {
-		  $pageURL .= $this->_serverName.":".$this->_port.$this->_uri;
-		 } else {
-		  $pageURL .= $this->_serverName.$this->_uri;
-		 }
-		 return $pageURL;
+		if($this->url==null){
+			$pageURL = 'http';
+			if ($this->_https) {$pageURL .= "s";}
+				$pageURL .= "://";
+			if ( $this->_port != "80") {
+				$pageURL .= $this->_serverName.":".$this->_port.$this->_uri;
+			} else {
+				$pageURL .= $this->_serverName.$this->_uri;
+			}
+			$this->url = ($pageURL[strlen($pageURL)-1]==='/') ? substr($pageURL, 0, -1) : $pageURL;
+		}
+		return $this->url;
 	}
-	
+
 }

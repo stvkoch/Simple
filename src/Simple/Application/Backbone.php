@@ -4,73 +4,92 @@ namespace Simple\Application;
 
 class Backbone {
 
-	private $_request;
-	private $_response;
-	private $_resources;
+	public $request;
+	public $response;
+	public $resources;
 
 
-	public function __construct(\Simple\Request\Base $request=null, $response=null, $resource=null, $bootstrap)
+
+	public function __construct(\Simple\Request\Base $request=null, $response=null, $resource=null, $bootstrap=array())
 	{
-		$this->_request=$request;
-		$this->_response=$response;
-		$this->_resources=$resouces;
+		$this->request=$request;
+		$this->response=$response;
+		$this->resources=$resource;
 		foreach ($bootstrap as $callback) {
-			$callback();
+			$callback($this);
 		}
 	}
 
 	public function setRequest($request)
 	{
-		$this->_request=$request;
+		$this->request=$request;
 	}
 
 	public function getRequest()
 	{
-		return $this->_request;
+		return $this->request;
 	}
 
 	public function setResponse($response)
 	{
-		$this->_response=$response;
+		$this->response=$response;
 	}
 
 	public function getResponse()
 	{
-		return $this->_response;
+		return $this->response;
 	}
 
-	public function setResource($resouces)
+	public function setResource($resource)
 	{
-		$this->_resources=$resouces;
+		$this->resources=$resource;
 	}
 
 	public function getResource()
 	{
-		return $this->_resources;
+		return $this->resources;
 	}
+
+//	public function hasClass
 
 	public function run()
 	{
-		$this->runResources($this->_resources);
+		$this->runResources($this->resources);
 	}
 
 	public function runResources($resources)
 	{
-		foreach ($resources as &$resource) {
-			try {
-				$className = $resource['namespace'].'\\'.$resource['class'];
-				$obj = new $className();
+		try {
+			foreach ($resources as &$resource) {
+				$className = $resource['class'] = $resource['namespace'].'\\'.ucfirst($resource['class']);
+
+				if(class_exists($className)) {
+					$obj = new $className();
+				} else {
+					throw new \Exception("notFoundClassException $className", 404);
+				}
+				$functionName = (isset($resource['function'])?$resource['function']:$resource['action'].'Action');
+
+				if(!method_exists($obj, $functionName))
+					throw new \Exception("notFoundFunctionException $functionName", 404);
+
 				//extended from Simple\Middleware\Base
 				if(method_exists($obj, 'setBackbone')) {
-					call_user_func_array(array($obj, 'setBackbone'), array($this));
+					call_user_func_array(array($obj, 'setBackbone'), array(&$this));
 				}
 				if(method_exists($obj, 'setCurrentResource')) {
 					call_user_func_array(array($obj, 'setCurrentResource'), array($resource));
 				}
-				call_user_func_array(array($obj, $resource['function']));
-			} catch (Exception $e) {
-				$resource['_exception'] = $e;
+
+				if(!call_user_func(array($obj, $functionName)))
+					break;
 			}
+		} catch (\Exception $e) {
+var_dump($e->getMessage(), $resource);exit;
+			if($e->getCode()==404)
+				\Simple\Response\HTTP::redirect( $this->request->getURL().'/404', 404 );
+			else
+				\Simple\Response\HTTP::redirect( $this->request->getURL().'/500', 500 );
 		}
 	}
 }

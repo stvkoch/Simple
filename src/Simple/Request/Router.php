@@ -9,9 +9,9 @@ class Router
 
 	//default resource
 	protected $_resource = array(
-		'namespace'=>'Frontend',
+		'namespace'=>'\Frontend',
 		'class'=>'index',
-		'function'=>'index',
+		'action'=>'index',
 		'format'=>'html',
 		'params'=>array()
 	);
@@ -19,13 +19,13 @@ class Router
 	protected $_routes=array(
 		array(
 			'route'=>'^([^\/]+)\/?$',
-			'controller'=>'$1',
+			'class'=>'$1',
 			'action' =>'index'
 		),
 		/*Controller e action por defeito "" or "/"*/
 		array(
 			'route'=>'^\/?$',
-			'controller' => 'index',
+			'class' => 'index',
 			'action' => 'index'
 		)
 	);
