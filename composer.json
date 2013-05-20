@@ -2,7 +2,7 @@
     "name": "stvkoch/Simple",
     "type": "library",
     "description": "Very Simple Model/SQL Buidler and Config Libray",
-    "keywords": ["microframework","Config","Model", "SQL Builder"],
+    "keywords": ["microframework", "Config", "Model", "SQL Builder"],
     "homepage": "http://github.com/stvkoch/Simple",
     "license": "MIT",
     "authors": [
@@ -15,6 +15,6 @@
         "php": ">=5.3.0"
     },
     "autoload": {
-        "psr-0": { "Simple": "src/"}
+        "psr-0": { "Simple": "src/" }
     }
-}  
+}

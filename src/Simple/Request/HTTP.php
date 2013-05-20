@@ -16,7 +16,7 @@ class HTTP extends \Simple\Request\Base
 	* \Simple\Request\HTTP( $_SERVER, $_REQUEST, $_FILES );
 	* \Simple\Request\Base( '/path/to/resource', 'foo=fooX&bar=barY', 'SIMPLE' );
 	*/
-	function __construct($server=array(), $request=array(), $files=array(), $router=null)
+	function __construct(&$server=array(), &$request=array(), &$files=array(), $router=null)
 	{
 		$this->_files = $files;
 		$this->_serverName = $server["SERVER_NAME"];
