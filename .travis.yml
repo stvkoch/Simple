@@ -1,12 +1,12 @@
 language: php
 
 php:
+  - 5.3.3
   - 5.3
   - 5.4
-env:
-  - DB=mysql
-#before_script: 
-  #- composer install
-  #- sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS simple_model_test_tmp;create database IF NOT EXISTS simple_table_tests;'; fi"
+  - 5.5
 
-script: phpunit .
+before_script:
+  - composer install --dev --prefer-source
+
+script: phpunit
