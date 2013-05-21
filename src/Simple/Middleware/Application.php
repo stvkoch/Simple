@@ -7,16 +7,31 @@ class Application extends \Simple\Middleware\Base
 
 	public function dispatch()
 	{
-		if( !isset($this->resource['routesFileNameConfig']) )
-		{
-			throw new \Exception("@routesFileNameConfig property is not defined in middleware definitions!", 1);
-		}
-
-		$routes = \Simple\Config\PHP::getScope($this->resource['routesFileNameConfig']);
-		$router = new \Simple\Request\Router($routes );
-		$resourceFromRoutes = $router->getResourcesByRequest($this->app->request);
-
-		$this->app->runResources($resourceFromRoutes);
+		try{
+			$resources = $this->backbone->getResourceById('simple.router')->getResources();
+			$this->backbone->runResources($resources);
+		} catch (\Exception $e) {
+			$request = $this->backbone->getResourceById('simple.request')->getRequest();
+			if($e->getCode()==404)
+				\Simple\Response\HTTP::redirect( $request->getURL().'/404', 404 );
+			else
+				\Simple\Response\HTTP::redirect( $request->getURL().'/500', 500 );
+			}
 	}
 
+	static function definition( $definition ) {
+		if(!isset($definition['id'])) throw new \Exception("@id has mandatary definition on middlewares routes", 1);
+
+		return $definition + array(
+					'route'=>'.*',
+					'namespace' => '\Simple\Middleware',
+					'class'=>'Application',
+					'function'=>'_',
+					'id'=>'simple.application',
+
+					'_run'=>true,
+					'_continue'=>true,
+					'_persist' => true
+				);
+	}
 }
