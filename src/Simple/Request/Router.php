@@ -13,6 +13,7 @@ class Router
 		'class'=>'index',
 		'action'=>'index',
 		'format'=>'html',
+		'id'=>'simple.controller',
 		'params'=>array()
 	);
 
@@ -69,14 +70,18 @@ class Router
 
 		foreach ($routes as $resourceBase)
 		{
-			if(preg_match('@'.$resourceBase['route'].'@', $uri, $matches))
+
+			$regxRoute = $resourceBase['route'];
+			unset($resourceBase['route']);
+
+			if(preg_match('@'.$regxRoute.'@', $uri, $matches))
 			{
 				foreach ($resourceBase as $resourceType => $positionMatch)
 				{
 					if(is_int($positionMatch)){
 						if(isset($matches[$positionMatch])) $resource[$resourceType] = $matches[$positionMatch];
 					}elseif(strpos($positionMatch, '$')!==false){
-						$resource[$resourceType] = preg_replace('@'.$resourceBase['route'].'@', $positionMatch, $uri);
+						$resource[$resourceType] = preg_replace('@'.$regxRoute.'@', $positionMatch, $uri);
 					}else{
 						$resource[$resourceType] = $positionMatch;
 					}
@@ -84,7 +89,6 @@ class Router
 
 			    if(isset($resourceBase['_continue']))
 			    {
-
 					$_continue = $resourceBase['_continue'];
 					unset($resourceBase['_continue']);
 					//unset($resource['_continue']);
@@ -92,7 +96,7 @@ class Router
 
 				if(isset($resourceBase['_replace']))
 			    {
-					$uri = preg_replace('@'.$resourceBase['route'].'@', $resourceBase['_replace'], $uri);
+					$uri = preg_replace('@'.$regxRoute.'@', $resourceBase['_replace'], $uri);
 					unset($resourceBase['_replace']);
 					//unset($resource['_replace']);
 				}
@@ -106,12 +110,7 @@ class Router
 
 				if(isset($resourceBase['_run']) && $resourceBase['_run'])
 			    {
-			    	//unset($resource['_run']);
-			    	if(isset($resourceBase['id']))
-						$resources[$resourceBase['id']] = $resource;
-					else
-						$resources[] = $resource;
-
+					$resources[] = $resource;
 				}
 
 				if( !$_continue )
