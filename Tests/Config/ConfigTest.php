@@ -1,9 +1,4 @@
 <?php
-require_once 'Singleton/Face.php';
-require_once 'Singleton/Base.php';
-
-require_once 'Config/Base.php';
-require_once 'Config/PHP.php';
 
 class ConfigTest extends PHPUnit_Framework_TestCase
 {

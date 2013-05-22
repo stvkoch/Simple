@@ -1,13 +1,4 @@
 <?php
-require_once 'Singleton/Face.php';
-require_once 'Singleton/Base.php';
-
-require_once 'Config/Base.php';
-require_once 'Config/PHP.php';
-
-require_once 'Request/Base.php';
-require_once 'Request/HTTP.php';
-require_once 'Request/Router.php';
 
 
 class RequestTest extends PHPUnit_Framework_TestCase

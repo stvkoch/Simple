@@ -17,7 +17,8 @@ class Router extends \Simple\Middleware\Base
 
 		$routes = \Simple\Config\PHP::getScope($this->resource['routesFileNameConfig']);
 		$router = new \Simple\Request\Router($routes );
-		$this->_resources = $router->getResourcesByRequest($this->backbone->getResourceById('simple.request')->getRequest());
+        $request = $this->backbone->getResourceById('simple.request')->getRequest();
+		$this->_resources = $router->getResourcesByRequest($request);
 
 		return true;
 	}

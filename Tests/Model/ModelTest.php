@@ -1,19 +1,5 @@
 <?php
-require_once 'Singleton/Face.php';
-require_once 'Singleton/Base.php';
 
-require_once 'Config/Base.php';
-require_once 'Config/PHP.php';
-
-require_once 'Model/Base.php';
-require_once 'Model/Result/Base.php';
-
-require_once 'Model/Validation/Validations.php';
-
-require_once 'Model/Exception/ValidationException.php';
-require_once 'Model/Exception/InvalidValue.php';
-
-require_once 'travis-ci-tests/Model/Models/User.php';
 
 class ModelTest extends PHPUnit_Framework_TestCase
 {
