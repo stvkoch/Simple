@@ -44,7 +44,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
 
 		$resourcesFromRoute = $router->getResourcesByRequest($request);
 
-		$this->assertEmpty(array_diff($resources, $resourcesFromRoute));
+		$this->assertEmpty(array_diff_assoc($resources, $resourcesFromRoute));
 
 	}
 /*
