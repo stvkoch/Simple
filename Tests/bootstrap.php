@@ -1,6 +1,6 @@
 <?php
 
-include_once('./autoload.php');
+include_once(__DIR__.'/autoload.php');
 // Register the directory to your include files
 $loader = new ClassLoader();
 
