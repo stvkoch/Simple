@@ -26,6 +26,12 @@ class Backbone {
 	}
 
 
+	public function getResources()
+	{
+		return $this->_resources;
+	}
+
+
 	public function runResources($resources)
 	{
 
@@ -37,6 +43,7 @@ class Backbone {
 				if(!isset($this->_resources[$resource['id']]))
 				{
 					$className = $resource['class'] = $resource['namespace'].'\\'.ucfirst($resource['class']);
+
 					if(class_exists($className))
 					{
 						$this->_resources[$resource['id']] = new $className();

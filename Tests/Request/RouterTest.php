@@ -25,43 +25,25 @@ class RouterTest extends PHPUnit_Framework_TestCase
 		$router = new \Simple\Request\Router( $routes );
 
 		$resources = array(
-  			'front.mid.flash.open' => array(
-    			'namespace' =>"\Frontend\Middleware",
-    			'class' => "Flash",
-    			'function' => "openFlash",
-    			'format' => "html",
-    			'params' => array(),
-    			'route' => ".*",
-    			'id' => "front.mid.flash.open",
-    			'_run' => true,
-    			'_continue' =>true
-    		),
-    		'simple.middleware.application' => array(
-    			'namespace' =>"\Simple\Middleware",
-    			'class' => "Application",
-    			'function' => "dispatch",
-    			'format' => "html",
-    			'params' => array(),
-    			'route' => ".*",
-    			'id' => "simple.middleware.application",
-    			'_run' => true,
-    			'_continue' =>true
-    		),
-    		'front.mid.flash.save' => array(
-    			'namespace' =>"\Frontend\Middleware",
-    			'class' => "Flash",
-    			'function' => "saveFlash",
-    			'format' => "html",
-    			'params' => array(),
-    			'route' => ".*",
-    			'id' => "front.mid.flash.save",
-    			'_run' => true,
-    			'_continue' =>true
-    		)
+
+			array(
+				'namespace' => '\Simple\Middleware\View',
+				'class'=>'Cache',
+				'function'=>'open',
+				'id'=>'Simple.middleware.view.cache.open'
+			),
+
+  			array(
+				'namespace' => '\Frontend\Middleware',
+				'class'=>'Flash',
+				'function'=>'openFlash',
+				'id'=>'front.mid.flash.open'
+			),
+
     	);
 
 		$resourcesFromRoute = $router->getResourcesByRequest($request);
-
+var_dump($resourcesFromRoute);
 		$this->assertEquals($resources, $resourcesFromRoute);
 
 	}

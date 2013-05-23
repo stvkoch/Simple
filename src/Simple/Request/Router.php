@@ -42,16 +42,16 @@ class Router
 		$this->_routes = $routes + $this->_routes;
 	}
 
-
 	public function getResourcesByURI($uri)
 	{
 		return $this->getResources($uri);
 	}
 
-	public function getResourcesByRequest( \Simple\Request\Base &$request)
+	public function getResourcesByRequest( \Simple\Request\Base &$request, $d=0)
 	{
 		$this->_request = $request;
-		return $this->getResources($request->getURI());
+
+		return $this->getResources($request->getURI(), $d);
 	}
 
 	public function getDefaultResource()
@@ -61,7 +61,7 @@ class Router
 		return $resource;
 	}
 
-	public function getResources($uri)
+	public function getResources($uri, $d=0)
 	{
 		$resources = array();
 		$resource = $this->getDefaultResource();
@@ -70,6 +70,7 @@ class Router
 
 		foreach ($routes as $resourceBase)
 		{
+
 
 			$regxRoute = $resourceBase['route'];
 			unset($resourceBase['route']);
@@ -87,18 +88,11 @@ class Router
 					}
 			    }
 
-			    if(isset($resourceBase['_continue']))
-			    {
-					$_continue = $resourceBase['_continue'];
-					unset($resourceBase['_continue']);
-					//unset($resource['_continue']);
-				}
 
 				if(isset($resourceBase['_replace']))
 			    {
 					$uri = preg_replace('@'.$regxRoute.'@', $resourceBase['_replace'], $uri);
 					unset($resourceBase['_replace']);
-					//unset($resource['_replace']);
 				}
 
 				if( is_string($resource['params']) ) {
@@ -111,14 +105,23 @@ class Router
 				if(isset($resourceBase['_run']) && $resourceBase['_run'])
 			    {
 					$resources[] = $resource;
+					$resource = $this->getDefaultResource();
 				}
 
-				if( !$_continue )
-				{
-					break;
-				}else{
-					$resource = $this->getDefaultResource();//next resource, set default
+				if(isset($resourceBase['_continue']) && $resourceBase['_continue'])
+			    {
+					$_continue=$resourceBase['_continue'];
 				}
+
+
+			    if($_continue)
+			    {
+					continue;
+				} else {
+					break;
+				}
+
+
 			}
 		}
 

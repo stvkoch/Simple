@@ -9,6 +9,7 @@ class HTTP extends \Simple\Request\Base
 	protected $_https = false;
 	protected $_port = 80;
 	protected $_serverName = null;
+	protected $_url = null;
 
 
 
@@ -41,7 +42,7 @@ class HTTP extends \Simple\Request\Base
 
 	public function getURL()
 	{
-		if($this->url==null){
+		if($this->_url==null){
 			$pageURL = 'http';
 			if ($this->_https) {$pageURL .= "s";}
 				$pageURL .= "://";
@@ -50,9 +51,9 @@ class HTTP extends \Simple\Request\Base
 			} else {
 				$pageURL .= $this->_serverName.$this->_uri;
 			}
-			$this->url = ($pageURL[strlen($pageURL)-1]==='/') ? substr($pageURL, 0, -1) : $pageURL;
+			$this->_url = ($pageURL[strlen($pageURL)-1]==='/') ? substr($pageURL, 0, -1) : $pageURL;
 		}
-		return $this->url;
+		return $this->_url;
 	}
 
 }

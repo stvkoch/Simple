@@ -77,7 +77,6 @@ class Base
 
 	public function getId()
 	{
-		var_dump($this->_resources);
 		return md5(json_encode($this->_resources));
 	}
 

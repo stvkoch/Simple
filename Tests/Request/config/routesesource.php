@@ -32,50 +32,6 @@ return array(
 		'id'=>'front.mid.flash.open',
 		'_run'=>true,
 		'_continue'=>true
-	),
-
-	//mandatory
-	array(
-		'route'=>'.*',
-		'namespace' => '\Simple\Middleware',
-		'class'=>'Application',
-		'function'=>'dispatch',
-		'id'=>'simple.middleware.application',
-		'_run'=>true,
-		'_continue'=>true
-	),
-
-	//postRunController
-	array(
-		'route'=>'.*',
-		'namespace' => '\Frontend\Middleware',
-		'class'=>'Flash',
-		'function'=>'saveFlash',
-		'id'=>'front.mid.flash.save',
-		'_run'=>true,
-		'_continue'=>true
-	),
-
-	//postRunController
-	array(
-		'route'=>'.*',
-		'namespace' => '\Simple\Middleware\View',
-		'class'=>'Painter',
-		'function'=>'render',
-		'id'=>'Simple.middleware.view.painter.render',
-		'_run'=>true,
-		'_continue'=>true
-	),
-
-	//postRunController
-	array(
-		'route'=>'.*',
-		'namespace' => '\Simple\Middleware\View',
-		'class'=>'Cache',
-		'function'=>'save',
-		'id'=>'Simple.middleware.view.cache.save',
-		'_run'=>true,
-		'_continue'=>true
-	),
+	)
 
 );
