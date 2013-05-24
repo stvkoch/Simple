@@ -17,8 +17,7 @@
 
     "autoload": {
         "psr-0": {
-            "Simple": "src/",
-            "Lellol": "../"
+            "Simple": "src/"
         }
     }
 }
