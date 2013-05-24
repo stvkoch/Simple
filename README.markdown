@@ -110,15 +110,39 @@ Example file configuration. config/database.php
 	//config/routes.php
 	<?php
 	return array(
-		'@\.json$@'=>array('format'=>'json', '_continue'=>true),
-		'@^/([^/]+)/([^/]+)@'=>array('controller'=>'$1', 'action'=>'$2'),
+		array(
+			'route'=>'@\.json$@',
+			'format'=>'json',
+			'_continue'=>true
+		),
+		array(
+			'route'=>'@^/([^/]+)/([^/]+)@',
+			'namespace'=>'\Controller\Frontend'
+			'class'=>'$1',
+			'action'=>'$2'),
 	);
 
 
-	$routes = \Simple\Config\PHP::getScope('routes');
+	$routes = \Simple\Config\PHP::getScope('routes');//get array with array routes
 	$router = new \Simple\Request\Router( $routes );
 	$resourceFromRoute = $router->getResourceByURI($request->getURI()); //return array represent one resource
-
+	
+	//@example:
+	$resourceFromRoute = $router->getResourceByURI('/users/list.json');
+	var_dump($resourceFromRoute);
+	/*
+	//Return same like this:
+	[
+		[
+			'route'=>'@^/([^/]+)/([^/]+)@',
+			'namespace'=>'\Controller\Frontend'
+			'class'=>'users',
+			'action'=>'list',
+			'format'=>'json',
+			'params'=>[]
+		]
+	]
+	*/
 
 
 ### \Simple\Model\Model
