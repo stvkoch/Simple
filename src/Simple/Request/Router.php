@@ -62,6 +62,18 @@ class Router
 		return $resource;
 	}
 
+	private function _match(&$regxRoute, &$uri, &$matches)
+	{
+
+		if($regxRoute[0]==='!')
+		{
+			$regxRoute = ltrim($regxRoute,'!');
+
+			return !preg_match('@'.$regxRoute.'@', $uri, $matches);
+		}
+		return preg_match('@'.$regxRoute.'@', $uri, $matches);
+	}
+
 	public function getResources($uri, $d=0)
 	{
 		$resources = array();
@@ -74,8 +86,9 @@ class Router
 			$regxRoute = $resourceBase['route'];
 			unset($resourceBase['route']);
 
-			if(preg_match('@'.$regxRoute.'@', $uri, $matches))
+			if($this->_match($regxRoute, $uri, $matches))
 			{
+
 				foreach ($resourceBase as $resourceType => $positionMatch)
 				{
 					if(is_int($positionMatch)){
