@@ -7,6 +7,8 @@
 Simple Components helps build their bundled applications simply. Unpretentious way we want to help you save time and less development efforts.
 
 
+Complete example how use this: https://github.com/stvkoch/Simple-example
+
 
 ## Features
 
