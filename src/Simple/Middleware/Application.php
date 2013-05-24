@@ -9,7 +9,6 @@ class Application extends \Simple\Middleware\Base
 	{
 		try{
 			$resources = $this->backbone->getResourceById('simple.request')->getResources();
-
 			$this->backbone->runResources($resources);
 		} catch (\Exception $e) {
 			$request = $this->backbone->getResourceById('simple.request')->getRequest();

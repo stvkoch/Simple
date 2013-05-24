@@ -14,7 +14,8 @@ class Router
 		'action'=>'index',
 		'format'=>'html',
 		'id'=>'simple.controller',
-		'params'=>array()
+		'params'=>array(),
+		'_continue'=>false
 	);
 
 	protected $_routes=array(
@@ -66,12 +67,10 @@ class Router
 		$resources = array();
 		$resource = $this->getDefaultResource();
 		$routes = $this->_routes;
-		$_continue = false;
 
 		foreach ($routes as $resourceBase)
 		{
-
-
+			$_continue = false;
 			$regxRoute = $resourceBase['route'];
 			unset($resourceBase['route']);
 
