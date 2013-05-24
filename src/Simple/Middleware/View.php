@@ -19,8 +19,10 @@ echo " RENDER \n";
 
     public function open()
     {
-echo " OPEN \n";
-        //var_dump($this->backbone->getResourceById('simple.request')->getFingerPrint());
+
+        $fingerPrint = $this->backbone->getResourceById('simple.request')->getFingerPrint();
+        echo '<!--Finger Print or Cache Key '.$fingerPrint.'-->';
+        echo "<pre>";
 
     }
 
@@ -32,6 +34,6 @@ echo " SAVE \n";
 
 
     public function send(){
-
+echo " SEND \n";
     }
 }
