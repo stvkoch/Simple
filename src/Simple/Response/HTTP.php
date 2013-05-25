@@ -1,11 +1,14 @@
 <?php
 
 namespace Simple\Response;
+/*
+$response = new Response( $resource );
 
 
-class HTTP extends Base {
+*/
+class HTTP extends \Simple\Response\Base {
 
-	static protected $_statusMessages = array(
+	protected $statusMessages = array(
         //Informational 1xx
         100 => '100 Continue',
         101 => '101 Switching Protocols',
@@ -56,11 +59,72 @@ class HTTP extends Base {
         505 => '505 HTTP Version Not Supported'
     );
 
+    protected $contentFile;
 
-	static public function redirect($url, $code=307)
+    protected $format;
+
+
+    public function __construct($resource)
+    {
+        $this->format = $resource['format'];
+        $this->contentFile = str_replace(array('\Controller\\', '\\'), array('\View\\','/'), $resource['class']).'/'. strtolower($resource['action']);
+    }
+
+
+	public function redirect($url, $code=307)
 	{
-		header('Status: '.self::$_statusMessages[$code]);
+		header('Status: '.$this->statusMessages[$code]);
 		header('Location: '.$url);
 		exit;
 	}
+
+
+    /**
+     * Gets the value of contentFile.
+     *
+     * @return mixed
+     */
+    public function getContentFile()
+    {
+        return $this->contentFile;
+    }
+
+    /**
+     * Sets the value of contentFile.
+     *
+     * @param mixed $contentFile the contentFile
+     *
+     * @return self
+     */
+    public function setContentFile($contentFile)
+    {
+        $this->contentFile = $contentFile;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of format.
+     *
+     * @return mixed
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    /**
+     * Sets the value of format.
+     *
+     * @param mixed $format the format
+     *
+     * @return self
+     */
+    public function setFormat($format)
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
 }

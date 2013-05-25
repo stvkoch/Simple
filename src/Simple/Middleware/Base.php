@@ -7,6 +7,13 @@ abstract class Base
 	protected $backbone;
 	protected $resource;
 
+	public function __construct($resource=null, &$backbone=null)
+    {
+        $this->resource = $resource;
+        $this->backbone = $backbone;
+    }
+
+
 	public function setBackbone(&$backbone)
 	{
 		$this->backbone = $backbone;

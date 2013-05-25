@@ -46,7 +46,7 @@ class Backbone {
 
 					if(class_exists($className))
 					{
-						$this->_resources[$resource['id']] = new $className();
+						$this->_resources[$resource['id']] = new $className($resource, $this);
 					}
 					else
 					{
@@ -60,11 +60,12 @@ class Backbone {
 					throw new \Exception("notFoundFunctionException $functionName", 404);
 
 				//extended from Simple\Middleware\Base
-				if(method_exists($this->_resources[$resource['id']], 'setBackbone'))
-					call_user_func_array(array($this->_resources[$resource['id']], 'setBackbone'), array(&$this));
+				// if(method_exists($this->_resources[$resource['id']], 'setBackbone'))
+				// 	call_user_func_array(array($this->_resources[$resource['id']], 'setBackbone'), array(&$this));
 
-				if(method_exists($this->_resources[$resource['id']], 'setResource'))
-					call_user_func_array(array($this->_resources[$resource['id']], 'setResource'), array($resource));
+				// if(method_exists($this->_resources[$resource['id']], 'setResource'))
+				// 	call_user_func_array(array($this->_resources[$resource['id']], 'setResource'), array($resource));
+
 
 				if(call_user_func(array($this->_resources[$resource['id']], $functionName))===false)
 					break;

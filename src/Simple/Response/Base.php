@@ -5,26 +5,30 @@ namespace Simple\Response;
 
 abstract class Base implements \ArrayAccess {
 
-	public $_container = array();
+	protected $container = array();
 
     public function offsetSet($offset, $value) {
         if (is_null($offset)) {
-            $this->_container[] = $value;
+            $this->container[] = $value;
         } else {
-            $this->_container[$offset] = $value;
+            $this->container[$offset] = $value;
         }
     }
 
     public function offsetExists($offset) {
-        return isset($this->_container[$offset]);
+        return isset($this->container[$offset]);
     }
 
     public function offsetUnset($offset) {
-        unset($this->_container[$offset]);
+        unset($this->container[$offset]);
     }
 
     public function offsetGet($offset) {
-        return isset($this->_container[$offset]) ? $this->_container[$offset] : null;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
+    }
+
+    public function getVars() {
+        return $this->container;
     }
 
 }
