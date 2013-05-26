@@ -59,10 +59,21 @@ class HTTP extends \Simple\Response\Base {
         505 => '505 HTTP Version Not Supported'
     );
 
+    protected $contentType = array(
+        'html'=>'text/html',
+        'xml'=>'text/xml',
+        'json'=>'application/json',
+        'pdf'=>'application/pdf',
+        'vcad'=>'text/vcard',
+    );
+
     protected $contentFile;
+
+    protected $content;
 
     protected $format;
 
+    protected $cookie = array();
 
     public function __construct($resource)
     {
@@ -125,6 +136,35 @@ class HTTP extends \Simple\Response\Base {
         $this->format = $format;
 
         return $this;
+    }
+
+    /**
+     * Gets the value of content.
+     *
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * Sets the value of content.
+     *
+     * @param mixed $content the content
+     *
+     * @return self
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function sendHeader()
+    {
+        header('Content-type: '.$this->contentType[$this->format]);
     }
 
 }
