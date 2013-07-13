@@ -3,7 +3,7 @@ namespace Simple\Config;
 /**
  * Work like a container DI. And wrap config.
  * \Simple\Config\PHP::get(__CLASS__, 'attribute_name');
- * 
+ *
  * @author steven koch <steven.koch@co.sapo.pt>
 */
 class PHP extends \Simple\Config\Base {

@@ -17,9 +17,10 @@ class HTTP extends \Simple\Request\Base
 	* \Simple\Request\HTTP( $_SERVER, $_REQUEST, $_FILES );
 	* \Simple\Request\Base( '/path/to/resource', 'foo=fooX&bar=barY', 'SIMPLE' );
 	*/
-	function __construct(&$server=array(), &$request=array(), &$files=array())
+	function __construct(&$server=array(), &$request=array(), &$files=array(), $cookies=array())
 	{
 		$this->_files = $files;
+		$this->_cookies = $cookies;
 		$this->_serverName = $server["SERVER_NAME"];
 		if (isset($server["HTTPS"]) && $server["HTTPS"] == "on") $this->_https = true;
 		if (isset($server["SERVER_PORT"]) && $server["SERVER_PORT"] != "80") $this->_port = $server["SERVER_PORT"];

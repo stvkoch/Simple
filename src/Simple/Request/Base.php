@@ -21,7 +21,7 @@ class Base
 	*/
 	function __construct($env=null, $query=null, $method=null, $params=array())
 	{
-		if(!is_null($env)) $this->_uri=$env;
+		if(!is_null($env)) $this->_uri=substr($env,0,strpos($env, '?'));
 		if(!is_null($query)) $this->_query=$query;
 		if(!is_null($method)) $this->_method=$method;
 		if(count($params)) $this->_params=$params;

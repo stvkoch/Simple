@@ -22,7 +22,6 @@ class Request extends \Simple\Middleware\Base
 
     public function parseRequest()
     {
-
         $this->_request = new \Simple\Request\HTTP( $_SERVER, $_REQUEST, $_FILES );
         return true;
     }

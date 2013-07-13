@@ -7,8 +7,7 @@ abstract class Base implements \Simple\Singleton\Face{
 
 	static public function getInstance(){
 		if(is_null(self::$_instance)){
-			$className = get_called_class();
-			self::$_instance = new $className();
+			self::$_instance = new static();
 			self::$_instance->_init();
 		}
 		return self::$_instance;

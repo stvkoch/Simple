@@ -81,14 +81,12 @@ class HTTP extends \Simple\Response\Base {
         $this->contentFile = str_replace(array('\Controller\\', '\\'), array('\View\\','/'), $resource['class']).'/'. strtolower($resource['action']);
     }
 
-
 	public function redirect($url, $code=307)
 	{
 		header('Status: '.$this->statusMessages[$code]);
 		header('Location: '.$url);
 		exit;
 	}
-
 
     /**
      * Gets the value of contentFile.
@@ -165,6 +163,21 @@ class HTTP extends \Simple\Response\Base {
     public function sendHeader()
     {
         header('Content-type: '.$this->contentType[$this->format]);
+        foreach ($this->cookie as $cookie) {
+            header('SetCooie: '.$cookie);
+        }
+    }
+
+    public function setCookie(\Simple\Response\Cookie $cookie)
+    {
+        $this->cookie[] = $cookie;
+
+        return $this;
+    }
+
+    public function createCookie($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true)
+    {
+        $this->cookie[] = new \Simple\Response\Cookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
     }
 
 }
