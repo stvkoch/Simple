@@ -20,7 +20,7 @@ class Bwise {
 	* 001010100 = Bwise::createFromString('001010100');
 	* @return Bwise
 	*/
-	static public createFromString( $string ) {
+	static public function createFromString( $string ) {
 		return new self( intval($string, 2) );
 	}
 
