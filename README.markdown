@@ -82,8 +82,8 @@ Example file configuration. config/database.php
 			if(is_null($_handler)){
 				try {
 				    $_handler = new \PDO(
-				    	\Simple\Config\PHP::get('database', 'dsn'), 
-				    	\Simple\Config\PHP::get('database', 'username'), 
+				    	\Simple\Config\PHP::get('database', 'dsn'),
+				    	\Simple\Config\PHP::get('database', 'username'),
 				    	\Simple\Config\PHP::get('database', 'password')
 				    );
 				} catch (\PDOException $e) {
