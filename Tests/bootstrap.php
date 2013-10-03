@@ -1,5 +1,7 @@
 <?php
 
+echo "\n---INIT BOOSTRAP---\n\n";
+
 include_once(__DIR__.'/autoload.php');
 // Register the directory to your include files
 $loader = new ClassLoader();

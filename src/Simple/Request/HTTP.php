@@ -43,6 +43,7 @@ class HTTP extends \Simple\Request\Base
 
 	public function getURL()
 	{
+
 		if($this->_url==null){
 			$pageURL = 'http';
 			if ($this->_https) {$pageURL .= "s";}
