@@ -30,24 +30,32 @@ class Base
 
   public static $instance = null;
 
-  public static $configHandlerLocation = array('Model', 'handler' );
+  public static $handlers = array('ro'=>null,'w'=>null);
 
   protected $validations_all = array();
   protected $validations_insert = array();
   protected $validations_update = array();
 
 
-  //lazy load handler provide by \Simple\Config\PHP::get( self::$configHandlerLocation );
-  static private function handler()
+  static private function handler($mode='ro')
   {
-    return \Simple\Config\PHP::get( \Simple\Model\Base::$handlerConfigLocation );
+    return self::$handler[$mode];
   }
 
-
-  public function __invoke()
+  static private function setReadOnlyHandler($handler)
   {
-    return self::handler();
+    if(is_null(self::$handler['w']))
+      self::$handler['w'] = $handler;
+    return self::$handler['ro'] = $handler;
   }
+
+  static private function setWriteHandler($handler)
+  {
+    if(is_null(self::$handler['ro']))
+      self::$handler['ro'] = $handler;
+      return self::$handler['w'] = $handler;
+  }
+
 
   static public function instance()
   {
@@ -110,7 +118,7 @@ class Base
     $this->validation( $fields, array($this->validations_all, $this->validations_insert), 'new' );
 
     $sql = $this->_buildSthInsert($fields);
-    $sth = self::handler()->prepare($sql);
+    $sth = self::handler('w')->prepare($sql);
     $this->_bindParams($sth, $this->_buildSthBindParams($fields));
     $result = $sth->execute();
     return $result;
@@ -123,13 +131,13 @@ class Base
     $this->validation( $fields, array($this->validations_all, $this->validations_update), 'update' );
 
     try {
-      self::handler()->beginTransaction();
-        $sth = self::handler()->prepare($this->_buildSthUpdate($fields, $where));
+      self::handler('w')->beginTransaction();
+        $sth = self::handler('w')->prepare($this->_buildSthUpdate($fields, $where));
         $this->_bindParams($sth, $this->_buildSthBindParams($fields, $values_binds));
         $result = $sth->execute();
-      return self::handler()->commit();
+      return self::handler('w')->commit();
     } catch (\PDOException $e) {
-      self::handler()->rollback();
+      self::handler('w')->rollback();
       return false;
     }
   }
@@ -138,7 +146,7 @@ class Base
   //->delete('id = ? AND date > ?', array(1, '14-12-1975'));
   public function delete($where, $values_binds=array())
   {
-    $sth = self::handler()->prepare($this->_buildSthDelete($where));
+    $sth = self::handler('w')->prepare($this->_buildSthDelete($where));
     $this->_bindParams($sth, $this->_buildSthBindParams($values_binds));
     return $sth->execute();
   }
@@ -147,23 +155,23 @@ class Base
   public function transaction($callback)
   {
     try {
-      self::handler()->beginTransaction();
+      self::handler('w')->beginTransaction();
       $callback();
-      return self::handler()->commit();
+      return self::handler('w')->commit();
     } catch (\PDOException $e) {
-      self::handler()->rollback();
+      self::handler('w')->rollback();
       return false;
     }
   }
 
   public function begin(){
-    return self::handler()->beginTransaction();
+    return self::handler('w')->beginTransaction();
   }
   public function commit(){
-    return self::handler()->commit();
+    return self::handler('w')->commit();
   }
   public function rollback(){
-    self::handler()->rollback();
+    self::handler('w')->rollback();
   }
 
 
