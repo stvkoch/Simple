@@ -42,14 +42,14 @@ class Base
     return self::$handler[$mode];
   }
 
-  static private function setReadOnlyHandler($handler)
+  static public function setReadOnlyHandler($handler)
   {
     if(is_null(self::$handler['w']))
       self::$handler['w'] = $handler;
     return self::$handler['ro'] = $handler;
   }
 
-  static private function setWriteHandler($handler)
+  static public function setWriteHandler($handler)
   {
     if(is_null(self::$handler['ro']))
       self::$handler['ro'] = $handler;
