@@ -6,7 +6,7 @@ namespace Simple\Model;
 * Exemplo:
 *   $result->count()
 *
-*
+* \Simple\Model\Base::setWriteHandler( $pdo );
 * @author steven koch <steven.koch@co.sapo.pt>
 */
 
@@ -39,21 +39,21 @@ class Base
 
   static private function handler($mode='ro')
   {
-    return self::$handler[$mode];
+    return self::$handlers[$mode];
   }
 
   static public function setReadOnlyHandler($handler)
   {
-    if(is_null(self::$handler['w']))
-      self::$handler['w'] = $handler;
-    return self::$handler['ro'] = $handler;
+    if(is_null(self::$handlers['w']))
+      self::$handlers['w'] = $handler;
+    return self::$handlers['ro'] = $handler;
   }
 
   static public function setWriteHandler($handler)
   {
-    if(is_null(self::$handler['ro']))
-      self::$handler['ro'] = $handler;
-      return self::$handler['w'] = $handler;
+    if(is_null(self::$handlers['ro']))
+      self::$handlers['ro'] = $handler;
+      return self::$handlers['w'] = $handler;
   }
 
 
