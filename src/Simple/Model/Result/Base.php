@@ -34,7 +34,7 @@ class Base implements \Iterator
 
 
   //return new Result($sth->execute($valuesBinds), $this, $where, $valuesBinds, $opts);
-  public function __construct(&$sth, \Simple\Model\Model $model, $where, $values_binds=array(), $opts=array())
+  public function __construct(&$sth, \Simple\Model\Base $model, $where, $values_binds=array(), $opts=array())
   {
     $this->_sth=$sth;
     $this->_model=$model;
@@ -59,6 +59,8 @@ class Base implements \Iterator
 
   //iterator
   public function rewind(){
+    $this->_sth->execute();
+    $this->_i = 0;
     return $this->next();
   }
   public function current()
@@ -69,13 +71,13 @@ class Base implements \Iterator
   {
     return $this->_i;
   }
-  public function next() 
+  public function next()
   {
-    $this->_row = $this->_sth->fetch( self::DEFAULT_FETCH_TYPE);
+    $this->_row = $this->_sth->fetch();
     $this->_i++;
     return $this->_row;
   }
-  public function valid() 
+  public function valid()
   {
     return $this->_row;
   }
