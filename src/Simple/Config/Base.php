@@ -35,7 +35,7 @@ class Base extends \Simple\Singleton\Base{
 
     if(!isset(self::getInstance()->_config[$scope])) self::getInstance()->readClassConfig( $scope );
     $value = isset(self::getInstance()->_config[$scope][$attributeName]) ? self::getInstance()->_config[$scope][$attributeName] : $default ;
-    return (is_object($value)) ? $value() : $value;
+    return (is_callable($value)) ? $value() : $value;
   }
 
   static public function set( $scope, $attributeName, $value )
