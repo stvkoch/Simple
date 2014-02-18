@@ -20,8 +20,6 @@ namespace Simple\Model\Result;
 class Base implements \Iterator
 {
 
-  const DEFAULT_FETCH_TYPE = \PDO::FETCH_OBJ;//PDO::FETCH_ASSOC;//PDO::FETCH_OBJ;
-
   protected $_sth;
   protected $_model;
   protected $_where;
@@ -37,6 +35,7 @@ class Base implements \Iterator
   public function __construct(&$sth, \Simple\Model\Base $model, $where, $values_binds=array(), $opts=array())
   {
     $this->_sth=$sth;
+    $this->_sth->setFetchMode(PDO::FETCH_CLASS, get_class($model));
     $this->_model=$model;
     $this->_where=$where;
     $this->_valuesBinds=$values_binds;
@@ -59,7 +58,6 @@ class Base implements \Iterator
 
   //iterator
   public function rewind(){
-    $this->_sth->execute();
     $this->_i = 0;
     return $this->next();
   }
@@ -67,7 +65,7 @@ class Base implements \Iterator
   {
     return $this->_row;
   }
-  public function key() 
+  public function key()
   {
     return $this->_i;
   }
