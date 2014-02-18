@@ -9,10 +9,10 @@ namespace Models;
 
 class User extends \Simple\Model\Base{
 
-  protected $tableName = 'users';
+  protected $_tableName = 'users';
 
 
-  protected $joinsMap = array(
+  protected $_joinsMap = array(
     'highlight'=>'highlights ON highlights.userId=users.id',
     'images'=>'images ON images.id=images_users.imageId RIGHT JOIN imagesUsers.userId=users.id'
   );
@@ -25,19 +25,19 @@ class User extends \Simple\Model\Base{
    * $opts['value']
    * $opts['config']
    */
-  protected $validations_all = array(
+  protected $_validations_all = array(
       'name' => array(
           '\Simple\Model\Validation\Validations::notLessThat(20)',
           '\Simple\Model\Validation\Validations::required()',
       )
   );
-  protected $validations_insert = array(
+  protected $_validations_insert = array(
       'name' => array(
           '\Simple\Model\Validation\Validations::required', 
           '\Simple\Model\Validation\Validations::notLessThat(20)'
       ),
   );
-  protected $validations_update = array(
+  protected $_validations_update = array(
       'name' => array(
           '\Simple\Model\Validation\Validations::required', 
           '\Simple\Model\Validation\Validations::notLessThat(20)'

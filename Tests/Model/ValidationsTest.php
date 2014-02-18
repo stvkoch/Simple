@@ -9,8 +9,8 @@ class ValidationsTest extends PHPUnit_Framework_TestCase
 	public function testValidationsInsert(){
 		$user = new \Models\User();
 		$class = new \ReflectionClass($user);
-        $validations_all = $class->getProperty('validations_all');
-        $validations_insert = $class->getProperty('validations_insert');
+        $validations_all = $class->getProperty('_validations_all');
+        $validations_insert = $class->getProperty('_validations_insert');
         $validations_all->setAccessible(true);
         $validations_insert->setAccessible(true);
 

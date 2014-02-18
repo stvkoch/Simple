@@ -70,7 +70,7 @@ class Base
 
 
   //Validations--------------------------------------------------------------------------------------
-  public function _validation( $fields, $_validations_all, $action)
+  public function validation( $fields, $_validations_all, $action)
   {
     $msgs = array();
     if(!is_array($_validations_all)) $_validations_all = array($_validations_all);
@@ -117,7 +117,7 @@ class Base
   public function insert($fields)
   {
 
-    $this->_validation( $fields, array($this->_validations_all, $this->_validations_insert), 'new' );
+    $this->validation( $fields, array($this->_validations_all, $this->_validations_insert), 'new' );
 
     $sql = $this->_buildSthInsert($fields);
     $sth = self::handler('w')->prepare($sql);
@@ -130,7 +130,7 @@ class Base
   //->update(array('nome'=>'steven'), 'id = ? AND date > ?', array(1, '14-12-1975'));
   public function update($fields, $where, $values_binds=array())
   {
-    $this->_validation( $fields, array($this->_validations_all, $this->_validations_update), 'update' );
+    $this->validation( $fields, array($this->_validations_all, $this->_validations_update), 'update' );
 
     try {
       self::handler('w')->beginTransaction();
