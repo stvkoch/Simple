@@ -22,9 +22,9 @@ class Base
 
   protected $resultClassName = '\Simple\Model\Result\Base';
 
-  protected $tableName = '';
+  protected $_tableName = '';
 
-  protected $joinsMap = array();
+  protected $_joinsMap = array();
 
   protected $perPage = 20;
 
@@ -32,9 +32,9 @@ class Base
 
   public static $handler = array('ro'=>null, 'w'=>null);
 
-  protected $validations_all = array();
-  protected $validations_insert = array();
-  protected $validations_update = array();
+  protected $_validations_all = array();
+  protected $_validations_insert = array();
+  protected $_validations_update = array();
 
 
   static public function handler($mode='ro')
@@ -70,12 +70,12 @@ class Base
 
 
   //Validations--------------------------------------------------------------------------------------
-  public function validation( $fields, $validations_all, $action)
+  public function _validation( $fields, $_validations_all, $action)
   {
     $msgs = array();
-    if(!is_array($validations_all)) $validations_all = array($validations_all);
-    foreach ($validations_all as $validations)
-      foreach ($validations as $key => $call) {
+    if(!is_array($_validations_all)) $_validations_all = array($_validations_all);
+    foreach ($_validations_all as $_validations)
+      foreach ($_validations as $key => $call) {
         try {
           $opts = array('fieldName' => $key, 'action' => $action);
           if(isset($fields[$key])) $opts['value'] = $fields[$key];
@@ -117,7 +117,7 @@ class Base
   public function insert($fields)
   {
 
-    $this->validation( $fields, array($this->validations_all, $this->validations_insert), 'new' );
+    $this->_validation( $fields, array($this->_validations_all, $this->_validations_insert), 'new' );
 
     $sql = $this->_buildSthInsert($fields);
     $sth = self::handler('w')->prepare($sql);
@@ -130,7 +130,7 @@ class Base
   //->update(array('nome'=>'steven'), 'id = ? AND date > ?', array(1, '14-12-1975'));
   public function update($fields, $where, $values_binds=array())
   {
-    $this->validation( $fields, array($this->validations_all, $this->validations_update), 'update' );
+    $this->_validation( $fields, array($this->_validations_all, $this->_validations_update), 'update' );
 
     try {
       self::handler('w')->beginTransaction();
@@ -197,21 +197,23 @@ class Base
     $sth = self::handler()->prepare($this->_buildSthSelect($select, $where, $opts));
     $this->_bindParams($sth, $this->_buildSthBindParams($values_binds));
     $sth->execute();
-    $result = new $this->_resultClassName($sth, $this, $where, $values_binds, $opts);
+    $resultClassName = $this->resultClassName;
+    $result = new $resultClassName($sth, $this, $where, $values_binds, $opts);
     return $result;
   }
 
   //->one('id=?', array(1));
-  public function one($where='', $values_binds=array())
+  public function one($select='*', $where='', $values_binds=array(), $opts=array())
   {
-    $result = $this->select('*', $where, $values_binds);
+    $result = $this->select($select, $where, $values_binds, array('limit'=>1)+$opts);
+
     return $result->next();
   }
 
   //->all('date>?', array('14-12-1975'), array('order'=>'id', 'limit'=>1, 'offset'=>12'));
-  public function all($where='', $values_binds=array(), $opts=array())
+  public function all($select='*', $where='', $values_binds=array(), $opts=array())
   {
-    return $this->select('*', $where, $values_binds, $opts);
+    return $this->select($select, $where, $values_binds, $opts);
   }
 
   //result $this->model->count($this->_where, $this->_values_binds, $this->_opts)
@@ -255,28 +257,28 @@ class Base
 
   //->all('*', array('14-12-1975'), array('order'=>'id', 'limit'=>1, 'offset'=>12'));
   protected function _buildSthSelect($select='', $where=array(), &$opts=array()){
-    $sql = 'SELECT '.$select.' FROM '.$this->tableName;
+    $sql = 'SELECT '.$select.' FROM '.$this->_tableName;
     if(isset($opts['inner'])){
       if(is_array($opts['inner'])){
         foreach ($opts['inner'] as $join){
-          $sql .= ' INNER JOIN '.$this->joinsMap[$join];
+          $sql .= ' INNER JOIN '.$this->_joinsMap[$join];
         }
       }else
-        $sql .= ' INNER JOIN '.$this->joinsMap[$opts['inner']];
+        $sql .= ' INNER JOIN '.$this->_joinsMap[$opts['inner']];
     }
     if(isset($opts['left'])){
       if(is_array($opts['left'])){
         foreach ($$opts['left'] as $join)
-          $sql .= ' LEFT JOIN '.$this->joinsMap[$join];
+          $sql .= ' LEFT JOIN '.$this->_joinsMap[$join];
       }else
-        $sql .= ' LEFT JOIN '.$this->joinsMap[$opts['left']];
+        $sql .= ' LEFT JOIN '.$this->_joinsMap[$opts['left']];
     }
     if(isset($opts['right'])){
       if(is_array($opts['right'])){
         foreach ($$opts['right'] as $join)
-          $sql .= ' RIGHT JOIN '.$this->joinsMap[$join];
+          $sql .= ' RIGHT JOIN '.$this->_joinsMap[$join];
       }else
-        $sql .= ' RIGHT JOIN '.$this->joinsMap[$opts['right']];
+        $sql .= ' RIGHT JOIN '.$this->_joinsMap[$opts['right']];
     }
     if($where) $sql .= ' WHERE '.$where;
     if(isset($opts['group'])) $sql .= ' GROUP BY '.$opts['group'];
@@ -297,14 +299,14 @@ class Base
   //->insert(array('name'=>'steven', 'role'=>'admin'))
   protected function _buildSthInsert($fields){
     $keys = array_keys($fields);
-    $sql = 'INSERT INTO ' . $this->tableName . ' ('.implode(', ', $keys);
+    $sql = 'INSERT INTO ' . $this->_tableName . ' ('.implode(', ', $keys);
     array_walk($keys, function(&$v){$v=':'.$v;});
     return $sql.') VALUES ('.implode(', ', $keys).')';
   }
 
   //->update(array('nome'=>'steven'), 'id = ? AND date > ?', array(1, '14-12-1975'));
   protected function _buildSthUpdate($fields, $where){
-    $sql = 'UPDATE \''.$this->tableName.'\' SET  ';
+    $sql = 'UPDATE \''.$this->_tableName.'\' SET  ';
     foreach ($fields as $key => $value) {
       $sql .= '\''.$key.'\'=:'.$key. ',' ;
     }
@@ -317,14 +319,16 @@ class Base
 
   //->delete('id = ? AND date > ?', array(1, '14-12-1975'));
   protected function _buildSthDelete($where){
-    return 'DELETE FROM '.$this->tableName.' WHERE '.$where;
+    return 'DELETE FROM '.$this->_tableName.' WHERE '.$where;
   }
 
   protected function _buildSthBindParams(){
     $args = func_get_args();
+
     $fields_binds = array();
     foreach ($args as $arg) {
       foreach ($arg as $key => $value){
+
         if(is_int($key))
           $fields_binds[$key]=(strlen($value)==0 && !is_bool($value))? 'NULL' : $value;
         else

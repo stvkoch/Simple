@@ -35,7 +35,7 @@ class Base implements \Iterator
   public function __construct(&$sth, \Simple\Model\Base $model, $where, $values_binds=array(), $opts=array())
   {
     $this->_sth=$sth;
-    $this->_sth->setFetchMode(PDO::FETCH_CLASS, get_class($model));
+    $this->_sth->setFetchMode(\PDO::FETCH_CLASS, get_class($model));
     $this->_model=$model;
     $this->_where=$where;
     $this->_valuesBinds=$values_binds;
@@ -72,6 +72,7 @@ class Base implements \Iterator
   public function next()
   {
     $this->_row = $this->_sth->fetch();
+// var_dump($this->_row);
     $this->_i++;
     return $this->_row;
   }
