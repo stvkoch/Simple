@@ -20,13 +20,13 @@ namespace Simple\Model;
 class Base
 {
 
-  protected $resultClassName = '\Simple\Model\Result\Base';
+  protected $_resultClassName = '\Simple\Model\Result\Base';
 
   protected $_tableName = '';
 
   protected $_joinsMap = array();
 
-  protected $perPage = 20;
+  protected $_perPage = 20;
 
   public static $instance = null;
 
@@ -197,8 +197,8 @@ class Base
     $sth = self::handler()->prepare($this->_buildSthSelect($select, $where, $opts));
     $this->_bindParams($sth, $this->_buildSthBindParams($values_binds));
     $sth->execute();
-    $resultClassName = $this->resultClassName;
-    $result = new $resultClassName($sth, $this, $where, $values_binds, $opts);
+    $_resultClassName = $this->_resultClassName;
+    $result = new $_resultClassName($sth, $this, $where, $values_binds, $opts);
     return $result;
   }
 
@@ -285,7 +285,7 @@ class Base
     if(isset($opts['having'])) $sql .= ' HAVING '.$opts['having'];
     if(isset($opts['order'])) $sql .= ' ORDER BY '.$opts['order'];
     if(isset($opts['page'])){
-      if(!isset($opts['offset'])) $opts['offset'] = $this->perPage;
+      if(!isset($opts['offset'])) $opts['offset'] = $this->_perPage;
       if($opts['page']>0) $opts['page']--;
      $opts['limit'] = $opts['page'] * $opts['offset'];
     }
